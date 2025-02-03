@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{3CCC9358-0C2D-4D20-9444-E9A8ECD79F92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{DEF7B19E-8F73-4B43-9CE7-8D7A272B1FF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{40A2EA67-7C9C-48FF-A14F-18C0EF5FD43E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{3CCC9358-0C2D-4D20-9444-E9A8ECD79F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CCC9358-0C2D-4D20-9444-E9A8ECD79F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CCC9358-0C2D-4D20-9444-E9A8ECD79F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF7B19E-8F73-4B43-9CE7-8D7A272B1FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF7B19E-8F73-4B43-9CE7-8D7A272B1FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF7B19E-8F73-4B43-9CE7-8D7A272B1FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF7B19E-8F73-4B43-9CE7-8D7A272B1FF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40A2EA67-7C9C-48FF-A14F-18C0EF5FD43E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40A2EA67-7C9C-48FF-A14F-18C0EF5FD43E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40A2EA67-7C9C-48FF-A14F-18C0EF5FD43E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40A2EA67-7C9C-48FF-A14F-18C0EF5FD43E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
