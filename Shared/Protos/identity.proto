@@ -23,8 +23,7 @@ message RegisterRequest {
   string username = 1;
   string email = 2;
   string password = 3;
-  string role = 4;
-  string farm_id = 5;
+  string farm_id = 4;
 }
 
 message RegisterResponse {

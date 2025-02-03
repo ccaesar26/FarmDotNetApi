@@ -11,8 +11,10 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
-            .HasMany(u => u.Roles)
-            .WithMany(r => r.Users)
-            .UsingEntity(j => j.ToTable("UserRoles"));
+            .HasOne(u => u.Role)
+            .WithMany()
+            .HasForeignKey("RoleId");
+        
+        base.OnModelCreating(modelBuilder);
     }
 }

@@ -23,7 +23,7 @@ public class IdentityGrpcService(IAuthService authService) : IdentityService.Ide
 
     public override async Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
     {
-        await authService.RegisterManagerAsync(request.Username, request.Email, request.Password);
+        await authService.RegisterAsync(request.Username, request.Email, request.Password, null);
         return new RegisterResponse
         {
             Success = true,

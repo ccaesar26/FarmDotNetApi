@@ -21,15 +21,21 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         return GenerateJwtToken(user);
     }
 
-    public async Task RegisterManagerAsync(string username, string email, string password)
+    public async Task RegisterAsync(string username, string email, string password, string? farmId)
     {
         var user = new User
         {
             Username = username,
             Email = email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-            Roles = { new Role { Name = RoleNameTypes.Manager } }
+            Role = farmId != null ? new Role { Name = RoleNameTypes.Worker } : new Role { Name = RoleNameTypes.Manager }
         };
+
+        if (farmId != null)
+        {
+            user.FarmId = new Guid(farmId);
+        }
+        
         await userRepository.AddUserAsync(user);
     }
 
@@ -43,7 +49,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
             Subject = new ClaimsIdentity([
                 new Claim(FarmClaimTypes.UserId, user.Id.ToString()),
                 new Claim(FarmClaimTypes.Email, user.Email),
-                new Claim(FarmClaimTypes.Roles, string.Join(",", user.Roles.Select(r => r.Name))),
+                new Claim(FarmClaimTypes.Role, user.Role.Name),
                 new Claim(FarmClaimTypes.FarmId, user.FarmId.ToString() ?? string.Empty)
             ]),
             Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["AccessTokenExpiryMinutes"] ?? "60")),

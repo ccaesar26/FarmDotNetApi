@@ -9,7 +9,7 @@ public class UserRepository(IdentityDbContext context) : IUserRepository
     public async ValueTask<User?> GetUserByEmailAsync(string email)
     {
         return await context.Users
-            .Include(u => u.Roles)
+            .Include(u => u.Role)
             .SingleOrDefaultAsync(u => u.Email == email);
     }
     

@@ -1,29 +1,16 @@
 using System.Text;
-using IdentityService.Data;
-using IdentityService.GrpcServices;
-using IdentityService.Repositories;
-using IdentityService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+
 // Add services to the container.
-// Add DbContext
-builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Add Repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-// Add Services
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-// Add gRPC
-builder.Services.AddGrpc();
-
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new Exception("Jwt:Key not found."));
@@ -48,25 +35,25 @@ builder.Services
         };
     });
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOcelot(builder.Configuration);
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Add OpenAPI/Swagger
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
         options
-            .WithTitle("Identity Service API")
+            .WithTitle("API Gateway")
             .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
     });
 }
+
+builder.Services.AddEndpointsApiExplorer();
 
 app.UseHttpsRedirection();
 
@@ -75,7 +62,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Map gRPC Service
-app.MapGrpcService<IdentityGrpcService>();
+await app.UseOcelot();
 
 app.Run();
