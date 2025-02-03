@@ -20,11 +20,9 @@ public class User
     
     [Required]
     [MaxLength(120)]
-    public required string PasswordHash { get; init; }
+    public required string PasswordHash { get; set; }
     
-    [Required]
-    [MaxLength(120)]
-    public required string Role { get; init; }
+    public Guid? FarmId { get; init; }
     
-    public Guid? FarmId { get; set; }
+    public ICollection<Role> Roles { get; init; } = new List<Role>();
 }
