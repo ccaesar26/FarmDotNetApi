@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
+builder.Services.AddOcelot(builder.Configuration);
+
 // Add services to the container.
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -34,8 +36,6 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
     });
-
-builder.Services.AddOcelot(builder.Configuration);
 
 // Add OpenAPI/Swagger
 builder.Services.AddOpenApi();

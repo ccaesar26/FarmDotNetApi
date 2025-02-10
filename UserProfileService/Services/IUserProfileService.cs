@@ -1,0 +1,14 @@
+﻿using UserProfileService.Models.Entities;
+
+namespace UserProfileService.Services;
+
+public interface IUserProfileService
+{
+    public ValueTask<UserProfile?> GetUserProfileAsync(Guid id);
+    
+    public ValueTask AddUserProfileAsync(string name, DateOnly dateOfBirth, string gender, Guid userId);
+    
+    public ValueTask UpdateUserProfileAsync(Guid id, string name, DateOnly dateOfBirth, string gender);
+    
+    public ValueTask DeleteUserProfileAsync(Guid id);
+}

@@ -1,6 +1,5 @@
 using System.Text;
 using IdentityService.Data;
-using IdentityService.GrpcServices;
 using IdentityService.Repositories;
 using IdentityService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -74,8 +73,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Map gRPC Service
-app.MapGrpcService<IdentityGrpcService>();
 
 app.Run();

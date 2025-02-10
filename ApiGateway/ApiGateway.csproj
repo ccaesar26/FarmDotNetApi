@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="..\Shared\Protos\identity.proto" GrpcServices="Client" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Google.Protobuf" Version="3.29.3" />
       <PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
       <PackageReference Include="Grpc.Net.ClientFactory" Version="2.67.0" />
@@ -26,6 +22,14 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="OcelotConfig\ocelot.farmprofile.json" />
+      <_ContentIncludedByDefault Remove="OcelotConfig\ocelot.fields.json" />
+      <_ContentIncludedByDefault Remove="OcelotConfig\ocelot.global.json" />
+      <_ContentIncludedByDefault Remove="OcelotConfig\ocelot.identity.json" />
+      <_ContentIncludedByDefault Remove="OcelotConfig\ocelot.userprofile.json" />
     </ItemGroup>
 
 </Project>

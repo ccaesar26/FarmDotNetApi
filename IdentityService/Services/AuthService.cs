@@ -6,6 +6,7 @@ using IdentityService.Data;
 using IdentityService.Models;
 using IdentityService.Repositories;
 using Microsoft.IdentityModel.Tokens;
+using Shared.FarmClaimTypes;
 
 namespace IdentityService.Services;
 
@@ -50,7 +51,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
                 new Claim(FarmClaimTypes.UserId, user.Id.ToString()),
                 new Claim(FarmClaimTypes.Email, user.Email),
                 new Claim(FarmClaimTypes.Role, user.Role.Name),
-                new Claim(FarmClaimTypes.FarmId, user.FarmId.ToString() ?? string.Empty)
+                new Claim(FarmClaimTypes.FarmId, user.FarmId?.ToString() ?? string.Empty)
             ]),
             Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["AccessTokenExpiryMinutes"] ?? "60")),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
