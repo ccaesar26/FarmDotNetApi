@@ -20,9 +20,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // Add Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// Add gRPC
-builder.Services.AddGrpc();
-
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new Exception("Jwt:Key not found."));
