@@ -22,19 +22,19 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         return GenerateJwtToken(user);
     }
 
-    public async Task RegisterAsync(string username, string email, string password, string? farmId)
+    public async Task RegisterAsync(string username, string email, string password, string role, string? farmId)
     {
         var user = new User
         {
             Username = username,
             Email = email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-            Role = farmId != null ? new Role { Name = RoleNameTypes.Worker } : new Role { Name = RoleNameTypes.Manager }
+            Role = new Role { Name = role }
         };
-
+        
         if (farmId != null)
         {
-            user.FarmId = new Guid(farmId);
+            user.FarmId = Guid.Parse(farmId);
         }
         
         await userRepository.AddUserAsync(user);

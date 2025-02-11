@@ -1,4 +1,5 @@
-﻿using IdentityService.Services;
+﻿using IdentityService.Models.Dtos;
+using IdentityService.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers;
@@ -12,7 +13,13 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         try
         {
-            await authService.RegisterAsync(request.Username, request.Email, request.Password, null);
+            await authService.RegisterAsync(
+                request.Username,
+                request.Email,
+                request.Password,
+                request.Role,
+                request.FarmId
+            );
             return Ok();
         }
         catch (Exception ex)
@@ -25,7 +32,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         var token = await authService.AuthenticateAsync(request.Email, request.Password);
-        
+
         if (token == null)
         {
             return Unauthorized("Invalid credentials");
@@ -33,8 +40,4 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return Ok(new { token });
     }
-
-    public record RegisterRequest(string Username, string Email, string Password, string Role);
-
-    public record LoginRequest(string Email, string Password);
 }
