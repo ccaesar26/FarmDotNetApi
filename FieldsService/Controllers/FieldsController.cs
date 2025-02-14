@@ -27,6 +27,14 @@ public class FieldsController(
         var claims = User.Claims.Select(c => new { c.Type, c.Value });
         return Ok(new { claims });
     }
+    
+    [Authorize(Policy = "ManagerOnly")]
+    [HttpGet("has-farm")]
+    public IActionResult HasFarm()
+    {
+        var farmId = farmAuthorizationService.GetUserFarmId();
+        return Ok(new { farmId });
+    }
 
     [Authorize(Policy = "ManagerOnly")]
     [HttpPost("create")]

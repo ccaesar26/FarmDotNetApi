@@ -11,4 +11,5 @@ public interface IUserProfileService
     public ValueTask UpdateUserProfileAsync(Guid id, string name, DateOnly dateOfBirth, string gender);
     
     public ValueTask DeleteUserProfileAsync(Guid id);
+    ValueTask<UserProfile?> GetUserProfileByUserIdAsync(Guid userId);
 }

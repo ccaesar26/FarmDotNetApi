@@ -12,7 +12,7 @@ namespace IdentityService.Services;
 
 public class AuthService(IUserRepository userRepository, IConfiguration configuration) : IAuthService
 {
-    public async Task<string?> AuthenticateAsync(string email, string password)
+    public async ValueTask<string?> AuthenticateAsync(string email, string password)
     {
         var user = await userRepository.GetUserByEmailAsync(email);
 
@@ -22,7 +22,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         return GenerateJwtToken(user);
     }
 
-    public async Task RegisterAsync(string username, string email, string password, string role, string? farmId)
+    public async ValueTask RegisterAsync(string username, string email, string password, string role, string? farmId)
     {
         var user = new User
         {
@@ -38,6 +38,12 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         }
         
         await userRepository.AddUserAsync(user);
+    }
+
+    public async ValueTask<string> GetRoleAsync(string email)
+    {
+        var user = await userRepository.GetUserByEmailAsync(email);
+        return user?.Role.Name ?? string.Empty;
     }
 
     private string GenerateJwtToken(User user)

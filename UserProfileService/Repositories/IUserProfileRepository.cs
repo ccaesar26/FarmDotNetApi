@@ -11,4 +11,5 @@ public interface IUserProfileRepository
     ValueTask UpdateAsync(UserProfile userProfile);
     
     ValueTask DeleteAsync(Guid id);
+    ValueTask<UserProfile?> GetByUserIdAsync(Guid userId);
 }

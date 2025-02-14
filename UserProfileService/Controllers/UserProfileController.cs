@@ -39,6 +39,19 @@ public class UserProfileController(
 
         return Ok(userProfile);
     }
+    
+    [HttpGet("user/{userId:guid}")]
+    public async Task<IActionResult> GetUserProfileByUserIdAsync(Guid userId)
+    {
+        var userProfile = await userProfileService.GetUserProfileByUserIdAsync(userId);
+
+        if (userProfile is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(userProfile);
+    }
 
     [HttpPut("{id:guid}"), Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> UpdateUserProfileAsync(Guid id, [FromBody] UpdateUserProfileRequest request)

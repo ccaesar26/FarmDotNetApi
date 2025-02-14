@@ -37,6 +37,17 @@ builder.Services
         };
     });
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Add OpenAPI/Swagger
 builder.Services.AddOpenApi();
 
@@ -59,6 +70,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("AllowAngular");
 
 app.MapControllers();
 

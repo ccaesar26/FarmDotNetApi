@@ -40,4 +40,9 @@ public class UserProfileService(IUserProfileRepository repository) : IUserProfil
     {
         await repository.DeleteAsync(id);
     }
+
+    public async ValueTask<UserProfile?> GetUserProfileByUserIdAsync(Guid userId)
+    {
+        return await repository.GetByUserIdAsync(userId);
+    }
 }

@@ -37,7 +37,9 @@ public class AuthController(IAuthService authService) : ControllerBase
         {
             return Unauthorized("Invalid credentials");
         }
-
-        return Ok(new { token });
+        
+        var role = await authService.GetRoleAsync(request.Email);
+        
+        return Ok(new { token, role });
     }
 }

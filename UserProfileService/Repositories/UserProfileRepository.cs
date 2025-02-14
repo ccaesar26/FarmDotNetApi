@@ -1,4 +1,5 @@
-﻿using UserProfileService.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using UserProfileService.Data;
 using UserProfileService.Models.Entities;
 
 namespace UserProfileService.Repositories;
@@ -30,5 +31,10 @@ public class UserProfileRepository(UserProfileDbContext context) : IUserProfileR
             context.UserProfiles.Remove(userProfile);
             await context.SaveChangesAsync();
         }
+    }
+
+    public async ValueTask<UserProfile?> GetByUserIdAsync(Guid userId)
+    {
+        return await context.UserProfiles.SingleOrDefaultAsync(up => up.UserId == userId);
     }
 }
