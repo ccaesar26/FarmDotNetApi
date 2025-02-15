@@ -2,6 +2,5 @@
 
 public record CreateFarmProfileRequest(
     string Name,
-    string Country,
-    Guid OwnerId
+    string Country
 );

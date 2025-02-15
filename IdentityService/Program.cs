@@ -24,6 +24,7 @@ builder.Services
     .AddJwtBearer(options =>
     {
         options.Authority = jwtSettings["Audience"];
+        options.RequireHttpsMetadata = false;
         
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -56,8 +57,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add Services
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

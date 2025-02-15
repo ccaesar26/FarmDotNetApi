@@ -10,7 +10,7 @@ public class FarmProfileService(IFarmProfileRepository farmProfileRepository) : 
         return await farmProfileRepository.GetByIdAsync(id);
     }
 
-    public async ValueTask AddFarmProfileAsync(string name, string country, Guid ownerId)
+    public async ValueTask<Guid> AddFarmProfileAsync(string name, string country, Guid ownerId)
     {
         var farmProfile = new FarmProfile
         {
@@ -19,7 +19,9 @@ public class FarmProfileService(IFarmProfileRepository farmProfileRepository) : 
             OwnerId = ownerId
         };
         
-        await farmProfileRepository.AddAsync(farmProfile);
+        farmProfile = await farmProfileRepository.AddAsync(farmProfile);
+        
+        return farmProfile.Id;
     }
 
     public async ValueTask UpdateFarmProfileAsync(Guid id, string name, string country)

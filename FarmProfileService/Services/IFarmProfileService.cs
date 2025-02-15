@@ -6,7 +6,7 @@ public interface IFarmProfileService
 {
     public ValueTask<FarmProfile?> GetFarmProfileAsync(Guid id);
 
-    public ValueTask AddFarmProfileAsync(string name, string country, Guid ownerId);
+    public ValueTask<Guid> AddFarmProfileAsync(string name, string country, Guid ownerId);
 
     public ValueTask UpdateFarmProfileAsync(Guid id, string name, string country);
 

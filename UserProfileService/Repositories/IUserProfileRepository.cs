@@ -6,7 +6,7 @@ public interface IUserProfileRepository
 {
     ValueTask<UserProfile?> GetByIdAsync(Guid id);
     
-    ValueTask AddAsync(UserProfile userProfile);
+    ValueTask<UserProfile> AddAsync(UserProfile userProfile);
     
     ValueTask UpdateAsync(UserProfile userProfile);
     

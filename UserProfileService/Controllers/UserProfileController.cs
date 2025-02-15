@@ -17,14 +17,14 @@ public class UserProfileController(
     [HttpPost("create"), Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> CreateUserProfileAsync([FromBody] CreateUserProfileRequest request)
     {
-        await userProfileService.AddUserProfileAsync(
+        var id = await userProfileService.AddUserProfileAsync(
             request.Name,
             request.DateOfBirth,
             request.Gender,
             request.UserId
         );
 
-        return Ok();
+        return Ok(id.ToString());
     }
 
     [HttpGet("{id:guid}")]

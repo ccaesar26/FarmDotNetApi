@@ -6,7 +6,7 @@ public interface IFarmProfileRepository
 {
     ValueTask<FarmProfile?> GetByIdAsync(Guid id);
     
-    ValueTask AddAsync(FarmProfile farmProfile);
+    ValueTask<FarmProfile> AddAsync(FarmProfile farmProfile);
     
     ValueTask UpdateAsync(FarmProfile farmProfile);
     

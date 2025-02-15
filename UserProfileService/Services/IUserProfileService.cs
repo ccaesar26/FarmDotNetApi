@@ -6,7 +6,7 @@ public interface IUserProfileService
 {
     public ValueTask<UserProfile?> GetUserProfileAsync(Guid id);
     
-    public ValueTask AddUserProfileAsync(string name, DateOnly dateOfBirth, string gender, Guid userId);
+    public ValueTask<Guid> AddUserProfileAsync(string name, DateOnly dateOfBirth, string gender, Guid userId);
     
     public ValueTask UpdateUserProfileAsync(Guid id, string name, DateOnly dateOfBirth, string gender);
     

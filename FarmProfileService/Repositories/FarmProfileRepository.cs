@@ -10,10 +10,11 @@ public class FarmProfileRepository(FarmProfileDbContext context) : IFarmProfileR
         return await context.FarmProfiles.FindAsync(id);
     }
 
-    public async ValueTask AddAsync(FarmProfile farmProfile)
+    public async ValueTask<FarmProfile> AddAsync(FarmProfile farmProfile)
     {
-        await context.FarmProfiles.AddAsync(farmProfile);
+        farmProfile = (await context.FarmProfiles.AddAsync(farmProfile)).Entity;
         await context.SaveChangesAsync();
+        return farmProfile;
     }
 
     public async ValueTask UpdateAsync(FarmProfile farmProfile)

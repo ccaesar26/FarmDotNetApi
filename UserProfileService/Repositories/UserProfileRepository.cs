@@ -11,10 +11,11 @@ public class UserProfileRepository(UserProfileDbContext context) : IUserProfileR
         return await context.UserProfiles.FindAsync(id);
     }
 
-    public async ValueTask AddAsync(UserProfile userProfile)
+    public async ValueTask<UserProfile> AddAsync(UserProfile userProfile)
     {
-        await context.UserProfiles.AddAsync(userProfile);
+        var ret = await context.UserProfiles.AddAsync(userProfile);
         await context.SaveChangesAsync();
+        return ret.Entity;
     }
 
     public async ValueTask UpdateAsync(UserProfile userProfile)

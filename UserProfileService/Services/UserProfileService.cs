@@ -10,7 +10,7 @@ public class UserProfileService(IUserProfileRepository repository) : IUserProfil
         return await repository.GetByIdAsync(id);
     }
 
-    public async ValueTask AddUserProfileAsync(string name, DateOnly dateOfBirth, string gender, Guid userId)
+    public async ValueTask<Guid> AddUserProfileAsync(string name, DateOnly dateOfBirth, string gender, Guid userId)
     {
         var userProfile = new UserProfile
         {
@@ -20,7 +20,9 @@ public class UserProfileService(IUserProfileRepository repository) : IUserProfil
             UserId = userId
         };
         
-        await repository.AddAsync(userProfile);
+        userProfile = await repository.AddAsync(userProfile);
+        
+        return userProfile.Id;
     }
 
     public async ValueTask UpdateUserProfileAsync(Guid id, string name, DateOnly dateOfBirth, string gender)

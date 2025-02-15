@@ -27,9 +27,15 @@ public class FarmProfileController(
     [HttpPost("create")]
     public async Task<IActionResult> CreateFarmProfileAsync([FromBody] CreateFarmProfileRequest request)
     {
-        await farmProfileService.AddFarmProfileAsync(request.Name, request.Country, request.OwnerId);
+        var userId = farmAuthorizationService.GetUserId();
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+        
+        var id = await farmProfileService.AddFarmProfileAsync(request.Name, request.Country, userId.Value);
 
-        return Ok();
+        return Ok(id.ToString());
     }
 
     [HttpGet("{id:guid}")]
