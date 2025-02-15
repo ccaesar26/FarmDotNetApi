@@ -10,7 +10,7 @@ using Shared.FarmClaimTypes;
 
 namespace IdentityService.Services;
 
-public class AuthService(IUserRepository userRepository, IConfiguration configuration) : IAuthService
+public class AuthService(IUserRepository userRepository, ITokenService tokenService) : IAuthService
 {
     public async ValueTask<string?> AuthenticateAsync(string email, string password)
     {
@@ -19,7 +19,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             return null;
 
-        return GenerateJwtToken(user);
+        return tokenService.GenerateJwtToken(user);
     }
 
     public async ValueTask RegisterAsync(string username, string email, string password, string role, string? farmId)
@@ -46,28 +46,24 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         return user?.Role.Name ?? string.Empty;
     }
 
-    private string GenerateJwtToken(User user)
+    public async ValueTask UpdateFarmIdAsync(string userId, string farmId)
     {
-        var jwtSettings = configuration.GetSection("Jwt");
-        var key = Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? throw new InvalidOperationException());
-
-        var tokenDescriptor = new SecurityTokenDescriptor
+        var user = await userRepository.GetUserByIdAsync(Guid.Parse(userId));
+        if (user != null)
         {
-            Subject = new ClaimsIdentity([
-                new Claim(FarmClaimTypes.UserId, user.Id.ToString()),
-                new Claim(FarmClaimTypes.Email, user.Email),
-                new Claim(FarmClaimTypes.Role, user.Role.Name),
-                new Claim(FarmClaimTypes.FarmId, user.FarmId?.ToString() ?? string.Empty)
-            ]),
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["AccessTokenExpiryMinutes"] ?? "60")),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            Issuer = jwtSettings["Issuer"],
-            Audience = jwtSettings["Audience"]
-        };
+            user.FarmId = Guid.Parse(farmId);
+            await userRepository.UpdateUserAsync(user);
+        }
+    }
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+    public async ValueTask UpdateUserProfileAsync(string userId, string userProfileId)
+    {
+        var user = await userRepository.GetUserByIdAsync(Guid.Parse(userId));
+        if (user != null)
+        {
+            user.UserProfileId = Guid.Parse(userProfileId);
+            await userRepository.UpdateUserAsync(user);
+        }
     }
     
     public string GenerateRefreshToken()

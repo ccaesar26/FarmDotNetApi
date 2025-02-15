@@ -6,20 +6,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using Shared.FarmAuthorizationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Add DbContext
-builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Add Repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-// Add Services
-builder.Services.AddScoped<IAuthService, AuthService>();
-
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new Exception("Jwt:Key not found."));
@@ -32,6 +23,8 @@ builder.Services
     })
     .AddJwtBearer(options =>
     {
+        options.Authority = jwtSettings["Audience"];
+        
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -43,6 +36,28 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
     });
+
+// Add authorization
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("ManagerOnly", policy => policy.RequireRole("Manager"));
+
+// Add DbContext
+builder.Services.AddDbContext<IdentityDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register IHttpContextAccessor (required for FarmAuthorizationService)
+builder.Services.AddHttpContextAccessor();
+
+// Register FarmAuthorizationService as a Scoped service
+builder.Services.AddScoped<IFarmAuthorizationService, FarmAuthorizationService>();
+
+// Add Repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Add Services
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

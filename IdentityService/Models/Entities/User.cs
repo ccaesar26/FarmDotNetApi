@@ -25,4 +25,6 @@ public class User
     public required Role Role { get; init; }
     
     public Guid? FarmId { get; set; }
+    
+    public Guid? UserProfileId { get; set; }
 }

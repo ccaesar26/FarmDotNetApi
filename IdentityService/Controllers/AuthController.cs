@@ -1,12 +1,19 @@
 ﻿using IdentityService.Models.Dtos;
 using IdentityService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.FarmAuthorizationService;
 
 namespace IdentityService.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(
+    IUserService userService,
+    IAuthService authService,
+    ITokenService tokenService,
+    IFarmAuthorizationService farmAuthorizationService
+) : ControllerBase
 {
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest request)
@@ -37,8 +44,61 @@ public class AuthController(IAuthService authService) : ControllerBase
         {
             return Unauthorized("Invalid credentials");
         }
-        
+
         var role = await authService.GetRoleAsync(request.Email);
+
+        return Ok(new { token, role });
+    }
+
+    [Authorize(Policy = "ManagerOnly")]
+    [HttpPut("update-farm-id")]
+    public async Task<IActionResult> UpdateFarmIdAsync([FromBody] UpdateFarmRequest request)
+    {
+        var userId = farmAuthorizationService.GetUserId();
+        if (userId == null || string.IsNullOrEmpty(userId.ToString()))
+        {
+            return Unauthorized();
+        }
+        
+        await authService.UpdateFarmIdAsync(userId.ToString()!, request.FarmId);
+        
+        return Ok();
+    }
+    
+    [Authorize(Policy = "ManagerOnly")]
+    [HttpPut("update-user-profile-id")]
+    public async Task<IActionResult> UpdateUserProfileAsync([FromBody] UpdateUserProfileRequest request)
+    {
+        var userId = farmAuthorizationService.GetUserId();
+        if (userId == null || string.IsNullOrEmpty(userId.ToString()))
+        {
+            return Unauthorized();
+        }
+        
+        await authService.UpdateUserProfileAsync(userId.ToString()!, request.UserProfileId);
+        
+        return Ok();
+    }
+    
+    [Authorize(Policy = "ManagerOnly")]
+    [HttpPost("upgrade-token")]
+    public async Task<IActionResult> UpgradeToken()
+    {
+        var userId = farmAuthorizationService.GetUserId();
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+        
+        var user = await userService.GetUserAsync(userId.Value);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        
+        var role = await authService.GetRoleAsync(userId.Value.ToString());
+        
+        var token = tokenService.GenerateJwtToken(user);
         
         return Ok(new { token, role });
     }

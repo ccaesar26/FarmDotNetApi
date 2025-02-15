@@ -5,7 +5,7 @@ namespace IdentityService.Data;
 
 public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : DbContext(options)
 {
-    public DbSet<User> Users { get; set; }
+    public DbSet<User?> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

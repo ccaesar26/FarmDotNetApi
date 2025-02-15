@@ -15,4 +15,18 @@ public class FarmAuthorizationService(IHttpContextAccessor httpContextAccessor) 
         }
         return Guid.Parse(claim.Value);
     }
+    
+    public Guid? GetUserId()
+    {
+        var claim = httpContextAccessor.HttpContext?.User.FindFirst("userId");
+        if (claim == null)
+        {
+            throw new UnauthorizedAccessException("User ID is missing from token.");
+        }
+        if (claim.Value == string.Empty)
+        {
+            return null;
+        }
+        return Guid.Parse(claim.Value);
+    }
 }
