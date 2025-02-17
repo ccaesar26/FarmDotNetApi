@@ -4,6 +4,7 @@ using System.Text;
 using FarmProfileService.Data;
 using FarmProfileService.Repositories;
 using FarmProfileService.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -58,6 +59,20 @@ builder.Services.AddScoped<IFarmProfileService, FarmProfileService.Services.Farm
 // Add controllers
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// Add MassTransit
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], builder.Configuration["RabbitMq:VirtualHost"],
+            h =>
+            {
+                h.Username(builder.Configuration["RabbitMq:Username"] ?? throw new InvalidOperationException());
+                h.Password(builder.Configuration["RabbitMq:Password"] ?? throw new InvalidOperationException());
+            });
+    });
+});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

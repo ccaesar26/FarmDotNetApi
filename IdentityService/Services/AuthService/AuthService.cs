@@ -1,14 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using IdentityService.Common;
-using IdentityService.Data;
-using IdentityService.Models;
+﻿using IdentityService.Models;
 using IdentityService.Repositories;
-using Microsoft.IdentityModel.Tokens;
-using Shared.FarmClaimTypes;
+using IdentityService.Services.TokenService;
 
-namespace IdentityService.Services;
+namespace IdentityService.Services.AuthService;
 
 public class AuthService(IUserRepository userRepository, ITokenService tokenService) : IAuthService
 {

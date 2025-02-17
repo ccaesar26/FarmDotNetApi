@@ -1,5 +1,7 @@
 ﻿using IdentityService.Models.Dtos;
-using IdentityService.Services;
+using IdentityService.Services.AuthService;
+using IdentityService.Services.TokenService;
+using IdentityService.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;

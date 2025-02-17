@@ -3,6 +3,5 @@
 public record CreateUserProfileRequest(
     string Name,
     DateOnly DateOfBirth,
-    string Gender,
-    Guid UserId
+    string Gender
 );

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;
+using Shared.Models.Events;
 using UserProfileService.Models.Dtos;
 using UserProfileService.Services;
 
@@ -11,20 +13,44 @@ namespace UserProfileService.Controllers;
 [Route("/api/user-profile")]
 public class UserProfileController(
     IUserProfileService userProfileService,
-    IFarmAuthorizationService farmAuthorizationService
+    IFarmAuthorizationService farmAuthorizationService,
+    IBus bus,
+    IPublishEndpoint publishEndpoint
 ) : ControllerBase
 {
+    [HttpPost("debug-create")]
+    public async Task<IActionResult> CreateUserProfileAsync()
+    {
+        var id = Guid.NewGuid();
+        
+        // var uri = new Uri("rabbitmq://localhost/user-profile-service/user-profile-created-debug");
+        // var endpoint = await bus.GetSendEndpoint(uri);
+        // await endpoint.Send(new UserProfileCreatedEvent(id, id));
+        
+        await publishEndpoint.Publish(new UserProfileCreatedEvent(id, id));
+        
+        return Ok();
+    }
+
     [HttpPost("create"), Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> CreateUserProfileAsync([FromBody] CreateUserProfileRequest request)
     {
+        var userId = farmAuthorizationService.GetUserId();
+        if (!userId.HasValue)
+        {
+            return Unauthorized();
+        }
+        
         var id = await userProfileService.AddUserProfileAsync(
             request.Name,
             request.DateOfBirth,
             request.Gender,
-            request.UserId
+            userId.Value
         );
+        
+        await publishEndpoint.Publish(new UserProfileCreatedEvent(userId.Value, id));
 
-        return Ok(id.ToString());
+        return Ok();
     }
 
     [HttpGet("{id:guid}")]

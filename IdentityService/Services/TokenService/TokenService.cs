@@ -5,7 +5,7 @@ using IdentityService.Models;
 using Microsoft.IdentityModel.Tokens;
 using Shared.FarmClaimTypes;
 
-namespace IdentityService.Services;
+namespace IdentityService.Services.TokenService;
 
 public class TokenService(IConfiguration configuration) : ITokenService
 {

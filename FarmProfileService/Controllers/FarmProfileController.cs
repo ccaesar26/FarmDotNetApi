@@ -2,9 +2,11 @@
 using FarmProfileService.Models;
 using FarmProfileService.Models.Dtos;
 using FarmProfileService.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;
+using Shared.Models.Events;
 
 namespace FarmProfileService.Controllers;
 
@@ -13,7 +15,8 @@ namespace FarmProfileService.Controllers;
 [Route("/api/farm-profile")]
 public class FarmProfileController(
     IFarmProfileService farmProfileService,
-    IFarmAuthorizationService farmAuthorizationService
+    IFarmAuthorizationService farmAuthorizationService,
+    IPublishEndpoint publishEndpoint
 ) : ControllerBase
 {
     [HttpGet("debug")]
@@ -28,14 +31,16 @@ public class FarmProfileController(
     public async Task<IActionResult> CreateFarmProfileAsync([FromBody] CreateFarmProfileRequest request)
     {
         var userId = farmAuthorizationService.GetUserId();
-        if (userId == null)
+        if (userId == null || userId.Value == Guid.Empty)
         {
             return Unauthorized();
         }
         
         var id = await farmProfileService.AddFarmProfileAsync(request.Name, request.Country, userId.Value);
 
-        return Ok(id.ToString());
+        await publishEndpoint.Publish(new FarmCreatedEvent(userId.Value, id));
+
+        return Ok();
     }
 
     [HttpGet("{id:guid}")]

@@ -1,7 +1,11 @@
 using System.Text;
 using IdentityService.Data;
 using IdentityService.Repositories;
-using IdentityService.Services;
+using IdentityService.Services.AuthService;
+using IdentityService.Services.EventConsumers;
+using IdentityService.Services.TokenService;
+using IdentityService.Services.UserService;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -60,8 +64,37 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+// Add controllers
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// Add MassTransit
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<UserProfileCreatedEventConsumer>();
+    x.AddConsumer<FarmCreatedEventConsumer>();
+    
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], builder.Configuration["RabbitMq:VirtualHost"], h =>
+        {
+            h.Username(builder.Configuration["RabbitMq:Username"] ?? throw new InvalidOperationException());
+            h.Password(builder.Configuration["RabbitMq:Password"] ?? throw new InvalidOperationException());
+        });
+        
+        // cfg.ReceiveEndpoint("user-profile-created", e =>
+        // {
+        //     e.Consumer<UserProfileCreatedEventConsumer>(context);
+        // });
+        
+        cfg.ConfigureEndpoints(context);
+        
+        // cfg.ReceiveEndpoint("farm-created", e =>
+        // {
+        //     e.Consumer<FarmCreatedEventConsumer>(context);
+        // });
+    });
+});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
