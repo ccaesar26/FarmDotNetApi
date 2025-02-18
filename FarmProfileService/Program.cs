@@ -63,7 +63,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Add MassTransit
 builder.Services.AddMassTransit(x =>
 {
-    x.UsingRabbitMq((context, cfg) =>
+    x.UsingRabbitMq((_, cfg) =>
     {
         cfg.Host(builder.Configuration["RabbitMq:Host"], builder.Configuration["RabbitMq:VirtualHost"],
             h =>

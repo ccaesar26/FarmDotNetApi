@@ -82,17 +82,7 @@ builder.Services.AddMassTransit(x =>
             h.Password(builder.Configuration["RabbitMq:Password"] ?? throw new InvalidOperationException());
         });
         
-        // cfg.ReceiveEndpoint("user-profile-created", e =>
-        // {
-        //     e.Consumer<UserProfileCreatedEventConsumer>(context);
-        // });
-        
         cfg.ConfigureEndpoints(context);
-        
-        // cfg.ReceiveEndpoint("farm-created", e =>
-        // {
-        //     e.Consumer<FarmCreatedEventConsumer>(context);
-        // });
     });
 });
 
