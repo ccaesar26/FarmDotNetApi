@@ -11,10 +11,7 @@ namespace IdentityService.Controllers;
 [ApiController]
 [Route("/api/[controller]")]
 public class AuthController(
-    IUserService userService,
-    IAuthService authService,
-    ITokenService tokenService,
-    IFarmAuthorizationService farmAuthorizationService
+    IAuthService authService
 ) : ControllerBase
 {
     [HttpPost("register")]
@@ -46,62 +43,40 @@ public class AuthController(
         {
             return Unauthorized("Invalid credentials");
         }
-
-        var role = await authService.GetRoleAsync(request.Email);
-
-        return Ok(new { token, role });
-    }
-
-    [Authorize(Policy = "ManagerOnly")]
-    [HttpPut("update-farm-id")]
-    public async Task<IActionResult> UpdateFarmIdAsync([FromBody] UpdateFarmRequest request)
-    {
-        var userId = farmAuthorizationService.GetUserId();
-        if (userId == null || string.IsNullOrEmpty(userId.ToString()))
+        
+        var cookieOptions = new CookieOptions
         {
-            return Unauthorized();
-        }
+            HttpOnly = true, // to prevent XSS
+            SameSite = SameSiteMode.Strict, // to prevent CSRF
+            Secure = true, // send only over HTTPS
+            Expires = DateTime.UtcNow.AddHours(1)
+        };
         
-        await authService.UpdateFarmIdAsync(userId.ToString()!, request.FarmId);
-        
-        return Ok();
+        Response.Cookies.Append("jwt", token, cookieOptions);
+
+        return Ok(new { message = "Login successful" });
     }
     
-    [Authorize(Policy = "ManagerOnly")]
-    [HttpPut("update-user-profile-id")]
-    public async Task<IActionResult> UpdateUserProfileAsync([FromBody] UpdateUserProfileRequest request)
-    {
-        var userId = farmAuthorizationService.GetUserId();
-        if (userId == null || string.IsNullOrEmpty(userId.ToString()))
-        {
-            return Unauthorized();
-        }
-        
-        await authService.UpdateUserProfileAsync(userId.ToString()!, request.UserProfileId);
-        
-        return Ok();
-    }
-    
-    [Authorize(Policy = "ManagerOnly")]
-    [HttpPost("upgrade-token")]
-    public async Task<IActionResult> UpgradeToken()
-    {
-        var userId = farmAuthorizationService.GetUserId();
-        if (userId == null)
-        {
-            return Unauthorized();
-        }
-        
-        var user = await userService.GetUserAsync(userId.Value);
-        if (user == null)
-        {
-            return Unauthorized();
-        }
-        
-        var role = await authService.GetRoleAsync(userId.Value.ToString());
-        
-        var token = tokenService.GenerateJwtToken(user);
-        
-        return Ok(new { token, role });
-    }
+    // [Authorize(Policy = "ManagerOnly")]
+    // [HttpPost("upgrade-token")]
+    // public async Task<IActionResult> UpgradeToken()
+    // {
+    //     var userId = farmAuthorizationService.GetUserId();
+    //     if (userId == null)
+    //     {
+    //         return Unauthorized();
+    //     }
+    //     
+    //     var user = await userService.GetUserAsync(userId.Value);
+    //     if (user == null)
+    //     {
+    //         return Unauthorized();
+    //     }
+    //     
+    //     var role = await authService.GetRoleAsync(userId.Value.ToString());
+    //     
+    //     var token = tokenService.GenerateJwtToken(user);
+    //     
+    //     return Ok(new { token, role });
+    // }
 }

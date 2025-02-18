@@ -14,4 +14,30 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         await userRepository.UpdateUserAsync(user);
     }
+
+    public async ValueTask<string> GetRoleAsync(string email)
+    {
+        var user = await userRepository.GetUserByEmailAsync(email);
+        return user?.Role.Name ?? string.Empty;
+    }
+
+    public async ValueTask UpdateFarmIdAsync(string userId, string farmId)
+    {
+        var user = await userRepository.GetUserByIdAsync(Guid.Parse(userId));
+        if (user != null)
+        {
+            user.FarmId = Guid.Parse(farmId);
+            await userRepository.UpdateUserAsync(user);
+        }
+    }
+
+    public async ValueTask UpdateUserProfileAsync(string userId, string userProfileId)
+    {
+        var user = await userRepository.GetUserByIdAsync(Guid.Parse(userId));
+        if (user != null)
+        {
+            user.UserProfileId = Guid.Parse(userProfileId);
+            await userRepository.UpdateUserAsync(user);
+        }
+    }
 }
