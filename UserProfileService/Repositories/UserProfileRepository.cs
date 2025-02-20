@@ -36,6 +36,6 @@ public class UserProfileRepository(UserProfileDbContext context) : IUserProfileR
 
     public async ValueTask<UserProfile?> GetByUserIdAsync(Guid userId)
     {
-        return await context.UserProfiles.SingleOrDefaultAsync(up => up.UserId == userId);
+        return await context.UserProfiles.SingleOrDefaultAsync(x => x.UserId == userId);
     }
 }

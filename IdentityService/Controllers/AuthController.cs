@@ -2,16 +2,16 @@
 using IdentityService.Services.AuthService;
 using IdentityService.Services.TokenService;
 using IdentityService.Services.UserService;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.FarmAuthorizationService;
 
 namespace IdentityService.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
 public class AuthController(
-    IAuthService authService
+    IAuthService authService,
+    ITokenService tokenService,
+    IUserService userService
 ) : ControllerBase
 {
     [HttpPost("register")]
@@ -43,19 +43,53 @@ public class AuthController(
         {
             return Unauthorized("Invalid credentials");
         }
-        
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true, // to prevent XSS
-            SameSite = SameSiteMode.Strict, // to prevent CSRF
-            Secure = true, // send only over HTTPS
-            Expires = DateTime.UtcNow.AddHours(1)
-        };
-        
-        Response.Cookies.Append("jwt", token, cookieOptions);
+
+        tokenService.SetTokenInCookie(token, HttpContext);
 
         return Ok(new { message = "Login successful" });
     }
+    
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("AuthToken");
+        return Ok(new { message = "Logged out" });
+    }
+
+    
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken()
+    {
+        var jwt = Request.Cookies["AuthToken"];
+        if (string.IsNullOrEmpty(jwt))
+        {
+            return Unauthorized();
+        }
+
+        var userClaim = tokenService.ValidateJwt(jwt);
+        if (userClaim == null)
+        {
+            return Unauthorized();
+        }
+
+        var user = await userService.GetUserAsync(new Guid(userClaim.UserId));
+
+        var newToken = tokenService.GenerateJwtToken(user ?? throw new InvalidOperationException());
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = false,
+            SameSite = SameSiteMode.None,
+            IsEssential = true,
+            Expires = DateTime.UtcNow.AddHours(1)
+        };
+
+        Response.Cookies.Append("jwt", newToken, cookieOptions);
+
+        return Ok(new { message = "Token refreshed" });
+    }
+
     
     // [Authorize(Policy = "ManagerOnly")]
     // [HttpPost("upgrade-token")]

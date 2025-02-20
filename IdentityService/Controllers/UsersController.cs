@@ -3,6 +3,7 @@ using IdentityService.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;
+using Shared.FarmClaimTypes;
 
 namespace IdentityService.Controllers;
 
@@ -43,4 +44,18 @@ public class UsersController(
 
         return Ok();
     }
+    
+    [HttpGet("me")]
+    public IActionResult GetUserRole()
+    {
+        var roleClaim = User.FindFirst(FarmClaimTypes.Role);
+        
+        if (roleClaim == null)
+        {
+            return Unauthorized(new { message = "User role not found" });
+        }
+        
+        return Ok(new { role = roleClaim.Value });
+    }
+
 }

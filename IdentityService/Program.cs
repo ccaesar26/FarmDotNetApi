@@ -6,6 +6,7 @@ using IdentityService.Services.EventConsumers;
 using IdentityService.Services.TokenService;
 using IdentityService.Services.UserService;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -29,7 +30,8 @@ builder.Services
     {
         options.Authority = jwtSettings["Audience"];
         options.RequireHttpsMetadata = false;
-        
+        options.SaveToken = true;
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -40,10 +42,24 @@ builder.Services
             ValidAudience = jwtSettings["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Request.Cookies.TryGetValue("AuthToken", out var token);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 // Add authorization
-builder.Services.AddAuthorizationBuilder()
+builder.Services
+    .AddAuthorizationBuilder()
     .AddPolicy("ManagerOnly", policy => policy.RequireRole("Manager"));
 
 // Add DbContext
@@ -73,7 +89,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<UserProfileCreatedEventConsumer>();
     x.AddConsumer<FarmCreatedEventConsumer>();
-    
+
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host(builder.Configuration["RabbitMq:Host"], builder.Configuration["RabbitMq:VirtualHost"], h =>
@@ -81,7 +97,7 @@ builder.Services.AddMassTransit(x =>
             h.Username(builder.Configuration["RabbitMq:Username"] ?? throw new InvalidOperationException());
             h.Password(builder.Configuration["RabbitMq:Password"] ?? throw new InvalidOperationException());
         });
-        
+
         cfg.ConfigureEndpoints(context);
     });
 });
@@ -103,7 +119,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

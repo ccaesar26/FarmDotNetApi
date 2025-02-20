@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;
+using Shared.FarmClaimTypes;
 using Shared.Models.Events;
 using UserProfileService.Models.Dtos;
 using UserProfileService.Services;
@@ -22,10 +23,6 @@ public class UserProfileController(
     public async Task<IActionResult> CreateUserProfileAsync()
     {
         var id = Guid.NewGuid();
-        
-        // var uri = new Uri("rabbitmq://localhost/user-profile-service/user-profile-created-debug");
-        // var endpoint = await bus.GetSendEndpoint(uri);
-        // await endpoint.Send(new UserProfileCreatedEvent(id, id));
         
         await publishEndpoint.Publish(new UserProfileCreatedEvent(id, id));
         
@@ -53,11 +50,16 @@ public class UserProfileController(
         return Ok();
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetUserProfileAsync(Guid id)
+    [HttpGet]
+    public async Task<IActionResult> GetUserProfileAsync()
     {
-        var userProfile = await userProfileService.GetUserProfileAsync(id);
-
+        var userId = farmAuthorizationService.GetUserId();
+        if (!userId.HasValue)
+        {
+            return Unauthorized();
+        }
+        
+        var userProfile = await userProfileService.GetUserProfileByUserIdAsync(userId.Value);
         if (userProfile is null)
         {
             return NotFound();

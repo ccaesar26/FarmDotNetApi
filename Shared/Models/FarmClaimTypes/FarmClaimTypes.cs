@@ -9,4 +9,12 @@ public static class FarmClaimTypes
     public const string Role = ClaimTypes.Role;
     public const string FarmId = "farmId";
     public const string UserProfileId = "userProfileId";
+    
+    public record FarmClaimDto(
+        string UserId,
+        string Email,
+        string Role,
+        string FarmId,
+        string UserProfileId
+    );
 }
