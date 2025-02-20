@@ -29,8 +29,8 @@
         "PUT"
       ],
       "HttpHandlerOptions": {
-        "UseCookieContainer": true,  
-        "AllowAutoRedirect": false   
+        "UseCookieContainer": true,
+        "AllowAutoRedirect": false
       }
     },
     {
@@ -48,15 +48,7 @@
         "POST",
         "PUT",
         "DELETE"
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-      "HttpHandlerOptions": {
-        "UseCookieContainer": true,
-        "AllowAutoRedirect": false
-      }
+      ]
     },
     {
       "DownstreamPathTemplate": "/api/farm-profile/{everything}",
@@ -73,11 +65,7 @@
         "POST",
         "PUT",
         "DELETE"
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
+      ]
     },
     {
       "DownstreamPathTemplate": "/api/user-profile/{everything}",
@@ -94,11 +82,7 @@
         "POST",
         "PUT",
         "DELETE"
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
+      ]
     },
     {
       "DownstreamPathTemplate": "/api/config/{everything}",
@@ -115,11 +99,7 @@
         "POST",
         "PUT",
         "DELETE"
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
+      ]
     }
   ],
   "GlobalConfiguration": {

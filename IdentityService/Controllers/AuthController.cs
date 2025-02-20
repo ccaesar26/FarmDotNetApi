@@ -89,28 +89,4 @@ public class AuthController(
 
         return Ok(new { message = "Token refreshed" });
     }
-
-    
-    // [Authorize(Policy = "ManagerOnly")]
-    // [HttpPost("upgrade-token")]
-    // public async Task<IActionResult> UpgradeToken()
-    // {
-    //     var userId = farmAuthorizationService.GetUserId();
-    //     if (userId == null)
-    //     {
-    //         return Unauthorized();
-    //     }
-    //     
-    //     var user = await userService.GetUserAsync(userId.Value);
-    //     if (user == null)
-    //     {
-    //         return Unauthorized();
-    //     }
-    //     
-    //     var role = await authService.GetRoleAsync(userId.Value.ToString());
-    //     
-    //     var token = tokenService.GenerateJwtToken(user);
-    //     
-    //     return Ok(new { token, role });
-    // }
 }
