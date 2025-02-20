@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace IdentityService.Migrations
 {
     /// <inheritdoc />
@@ -32,7 +34,8 @@ namespace IdentityService.Migrations
                     Email = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: false),
                     PasswordHash = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: false),
                     RoleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FarmId = table.Column<Guid>(type: "uuid", nullable: true)
+                    FarmId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserProfileId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,6 +47,22 @@ namespace IdentityService.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("2259c9c5-cb22-459f-89d3-5310856c93f9"), "Worker" },
+                    { new Guid("49d4dd5a-05ea-4709-9bd3-3bca33ee9857"), "Admin" },
+                    { new Guid("51e0c1cf-1d3e-42ac-a4f9-e1e59e58655a"), "Manager" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_Name",
+                table: "Roles",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",

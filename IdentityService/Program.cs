@@ -1,12 +1,13 @@
 using System.Text;
 using IdentityService.Data;
 using IdentityService.Repositories;
+using IdentityService.Repositories.RoleRepository;
 using IdentityService.Services.AuthService;
 using IdentityService.Services.EventConsumers;
+using IdentityService.Services.RoleService;
 using IdentityService.Services.TokenService;
 using IdentityService.Services.UserService;
 using MassTransit;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -62,10 +63,6 @@ builder.Services
     .AddAuthorizationBuilder()
     .AddPolicy("ManagerOnly", policy => policy.RequireRole("Manager"));
 
-// Add DbContext
-builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 // Register IHttpContextAccessor (required for FarmAuthorizationService)
 builder.Services.AddHttpContextAccessor();
 
@@ -74,11 +71,17 @@ builder.Services.AddScoped<IFarmAuthorizationService, FarmAuthorizationService>(
 
 // Add Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 // Add Services
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Add DbContext
+builder.Services.AddDbContext<IdentityDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add controllers
 builder.Services.AddControllers();

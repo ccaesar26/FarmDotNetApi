@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityService.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250203122431_Initial")]
+    [Migration("20250220134101_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -38,7 +38,27 @@ namespace IdentityService.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("49d4dd5a-05ea-4709-9bd3-3bca33ee9857"),
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("51e0c1cf-1d3e-42ac-a4f9-e1e59e58655a"),
+                            Name = "Manager"
+                        },
+                        new
+                        {
+                            Id = new Guid("2259c9c5-cb22-459f-89d3-5310856c93f9"),
+                            Name = "Worker"
+                        });
                 });
 
             modelBuilder.Entity("IdentityService.Models.User", b =>
@@ -61,6 +81,9 @@ namespace IdentityService.Migrations
                         .HasColumnType("character varying(120)");
 
                     b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("UserProfileId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Username")

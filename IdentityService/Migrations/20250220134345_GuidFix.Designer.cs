@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityService.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250215081527_Added userProfileId")]
-    partial class AddeduserProfileId
+    [Migration("20250220134345_GuidFix")]
+    partial class GuidFix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,27 @@ namespace IdentityService.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("b1a6dcd6-6c30-4f69-91b2-f19f7d1f9c3a"),
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("3f6c5d10-1e23-4f58-a7a3-c5f30c3b6a6d"),
+                            Name = "Manager"
+                        },
+                        new
+                        {
+                            Id = new Guid("4d6d5e20-2a67-491e-91f3-d7f78c1c2e7f"),
+                            Name = "Worker"
+                        });
                 });
 
             modelBuilder.Entity("IdentityService.Models.User", b =>

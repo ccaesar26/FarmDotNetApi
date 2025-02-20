@@ -1,10 +1,15 @@
 ﻿using IdentityService.Models;
 using IdentityService.Repositories;
+using IdentityService.Repositories.RoleRepository;
 using IdentityService.Services.TokenService;
 
 namespace IdentityService.Services.AuthService;
 
-public class AuthService(IUserRepository userRepository, ITokenService tokenService) : IAuthService
+public class AuthService(
+    IUserRepository userRepository,
+    ITokenService tokenService,
+    IRoleRepository roleRepository
+) : IAuthService
 {
     public async ValueTask<string?> AuthenticateAsync(string email, string password)
     {
@@ -23,17 +28,17 @@ public class AuthService(IUserRepository userRepository, ITokenService tokenServ
             Username = username,
             Email = email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-            Role = new Role { Name = role }
+            Role = await roleRepository.GetRoleByNameAsync(role) ?? throw new InvalidOperationException()
         };
-        
+
         if (farmId != null)
         {
             user.FarmId = Guid.Parse(farmId);
         }
-        
+
         await userRepository.AddUserAsync(user);
     }
-    
+
     public string GenerateRefreshToken()
     {
         return Guid.NewGuid().ToString();
