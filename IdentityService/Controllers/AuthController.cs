@@ -76,16 +76,8 @@ public class AuthController(
 
         var newToken = tokenService.GenerateJwtToken(user ?? throw new InvalidOperationException());
 
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = false,
-            SameSite = SameSiteMode.None,
-            IsEssential = true,
-            Expires = DateTime.UtcNow.AddHours(1)
-        };
-
-        Response.Cookies.Append("jwt", newToken, cookieOptions);
+        Response.Cookies.Delete("AuthToken");
+        tokenService.SetTokenInCookie(newToken, HttpContext);
 
         return Ok(new { message = "Token refreshed" });
     }

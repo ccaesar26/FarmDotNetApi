@@ -107,7 +107,7 @@ public class TokenService(IConfiguration configuration) : ITokenService
             HttpOnly = true,
             IsEssential = true,
             Secure = true,
-            SameSite = SameSiteMode.None
+            SameSite = SameSiteMode.Strict
         });
     }
 }
