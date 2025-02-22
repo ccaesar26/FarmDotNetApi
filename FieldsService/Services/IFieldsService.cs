@@ -16,4 +16,5 @@ public interface IFieldsService
     public Task DeleteFieldAsync(Guid id);
     
     public Task<bool> FieldExistsByNameAsync(Guid farmId, string name);
+    ValueTask<IEnumerable<Coordinate>> GetFieldsCoordinatesAsync(Guid farmId);
 }

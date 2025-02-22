@@ -143,4 +143,17 @@ public class FieldsController(
         var exists = await fieldsService.FieldExistsByNameAsync(farmId, fieldName);
         return Ok(new { exists });
     }
+    
+    [HttpGet("coordinates")]
+    public async Task<IActionResult> GetFieldCoordinatesAsync()
+    {
+        var farmId = farmAuthorizationService.GetUserFarmId();
+        if (farmId is null)
+        {
+            return Forbid("You are not authorized to view fields for this farm.");
+        }
+
+        var coordinates = await fieldsService.GetFieldsCoordinatesAsync(farmId.Value);
+        return Ok(new { coordinates });
+    }
 }

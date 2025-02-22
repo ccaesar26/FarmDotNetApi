@@ -11,10 +11,10 @@ public class FieldsRepository(FieldsDbContext context) : IFieldsRepository
         return await context.Fields.FindAsync(id);
     }
 
-    public async Task<List<Field?>> GetFieldsByFarmIdAsync(Guid farmId)
+    public async Task<List<Field>> GetFieldsByFarmIdAsync(Guid farmId)
     {
         return await context.Fields
-            .Where(f => f != null && f.FarmId == farmId)
+            .Where(f => f.FarmId == farmId)
             .ToListAsync();
     }
 

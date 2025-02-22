@@ -6,7 +6,7 @@ public interface IFieldsRepository
 {
     ValueTask<Field?> GetFieldByIdAsync(Guid id);
     
-    Task<List<Field?>> GetFieldsByFarmIdAsync(Guid farmId);
+    Task<List<Field>> GetFieldsByFarmIdAsync(Guid farmId);
     
     ValueTask<Field> AddFieldAsync(Field field);
     

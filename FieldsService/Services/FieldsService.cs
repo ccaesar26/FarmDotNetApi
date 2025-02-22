@@ -57,4 +57,10 @@ public class FieldsService(IFieldsRepository fieldsRepository) : IFieldsService
     {
         return await fieldsRepository.FieldExistsByNameAsync(farmId, name);
     }
+
+    public async ValueTask<IEnumerable<Coordinate>> GetFieldsCoordinatesAsync(Guid farmId)
+    {
+        var fields = await fieldsRepository.GetFieldsByFarmIdAsync(farmId);
+        return fields.Select(f => f.Boundary.Centroid.Coordinate);
+    }
 }
