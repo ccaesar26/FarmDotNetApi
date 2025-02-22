@@ -85,6 +85,23 @@
       ]
     },
     {
+      "DownstreamPathTemplate": "/api/weather/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5805
+        }
+      ],
+      "UpstreamPathTemplate": "/api/weather/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
       "DownstreamPathTemplate": "/api/config/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
