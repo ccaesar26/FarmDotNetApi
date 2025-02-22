@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;
 using Shared.FarmClaimTypes;
 using Shared.Models.Events;
+using UserProfileService.Extensions;
 using UserProfileService.Models.Dtos;
 using UserProfileService.Services;
 
@@ -65,7 +66,7 @@ public class UserProfileController(
             return NotFound();
         }
 
-        return Ok(userProfile);
+        return Ok(userProfile.ToDto());
     }
     
     [HttpGet("user/{userId:guid}")]
