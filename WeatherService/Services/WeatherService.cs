@@ -11,7 +11,7 @@ public class WeatherService(
     IConfiguration configuration
 ) : IWeatherService
 {
-    private readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(10);
+    private readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(5);
     
     public async ValueTask<FarmWeatherDto?> GetWeatherAsync(string city)
     {
@@ -23,7 +23,43 @@ public class WeatherService(
         var apiKey = configuration["OpenWeatherMap:ApiKey"];
         var apiUrl = configuration["OpenWeatherMap:ApiUrl"];
         
-        var response = await httpClient.GetAsync(apiUrl + $"weather?q={city}&appid={apiKey}&units=metric");
+        var url = apiUrl + $"weather?q={city}&appid={apiKey}&units=metric";
+        
+        weather = await GetWeatherFromUrlAsync(url);
+        if (weather is null)
+        {
+            return null;
+        }
+        
+        cache.Set(city, weather, _cacheDuration);
+        return weather;
+    }
+    
+    public async ValueTask<FarmWeatherDto?> GetWeatherAsync(double latitude, double longitude)
+    {
+        if (cache.TryGetValue($"{latitude},{longitude}", out FarmWeatherDto? weather))
+        {
+            return weather;
+        }
+
+        var apiKey = configuration["OpenWeatherMap:ApiKey"];
+        var apiUrl = configuration["OpenWeatherMap:ApiUrl"];
+        
+        var url = apiUrl + $"weather?lat={latitude}&lon={longitude}&appid={apiKey}&units=metric";
+        
+        weather = await GetWeatherFromUrlAsync(url);
+        if (weather is null)
+        {
+            return null;
+        }
+        
+        cache.Set($"{latitude},{longitude}", weather, _cacheDuration);
+        return weather;
+    }
+    
+    private async ValueTask<FarmWeatherDto?> GetWeatherFromUrlAsync(string url)
+    {
+        var response = await httpClient.GetAsync(url);
         if (!response.IsSuccessStatusCode)
         {
             return null;
@@ -31,13 +67,6 @@ public class WeatherService(
 
         var content = await response.Content.ReadAsStringAsync();
         var weatherData = JsonSerializer.Deserialize<WeatherData>(content);
-        if (weatherData is null)
-        {
-            return null;
-        }
-
-        weather = weatherData.ToFarmWeatherDto();
-        cache.Set(city, weather, _cacheDuration);
-        return weather;
+        return weatherData?.ToFarmWeatherDto();
     }
 }
