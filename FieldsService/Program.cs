@@ -19,6 +19,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Audience = jwtSettings["Audience"];
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
         
         // Validate the token issuer and audience
         options.TokenValidationParameters = new TokenValidationParameters
@@ -28,6 +30,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true, // Ensures tokens are not expired
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Request.Cookies.TryGetValue("AuthToken", out var token);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            }
         };
     });
 

@@ -41,14 +41,14 @@ public class FieldsController(
     public async Task<IActionResult> CreateFieldAsync([FromBody] CreateFieldRequest request)
     {
         var farmId = farmAuthorizationService.GetUserFarmId();
-        if (request.FarmId != farmId)
+        if (farmId is null)
         {
             return Forbid("You are not authorized to create fields for this farm.");
         }
 
         try
         {
-            var field = await fieldsService.AddFieldAsync(request.FarmId, request.FieldName, request.FieldBoundary);
+            var field = await fieldsService.AddFieldAsync(farmId.Value, request.FieldName, request.FieldBoundary);
             return Ok(new { field });
         }
         catch (Exception ex)

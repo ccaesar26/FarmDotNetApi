@@ -3,9 +3,7 @@ using Newtonsoft.Json;
 
 namespace FieldsService.Models.Dtos;
 
-public class CreateFieldRequest
-{
-    public Guid FarmId { get; init; }
+public class CreateFieldRequest {
     public required string FieldName { get; init; }
     
     [JsonConverter(typeof(NetTopologySuite.IO.Converters.GeometryConverter))]
