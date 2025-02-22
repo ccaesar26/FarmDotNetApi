@@ -1,5 +1,6 @@
 ﻿using ConfigurationService.Data;
 using ConfigurationService.Models;
+using ConfigurationService.Models.Dtos;
 using ConfigurationService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +38,4 @@ public class ConfigurationController(
         var decryptedValue = encryptionService.Decrypt(setting.EncryptedValue);
         return Ok(new { key = setting.Key, value = decryptedValue });
     }
-}
-
-public class ConfigRequest
-{
-    public string Key { get; set; } = string.Empty;
-    public string Value { get; set; } = string.Empty;
 }
