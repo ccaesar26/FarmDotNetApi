@@ -1,8 +1,10 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.FarmClaimTypes;
 using WeatherService.Converters;
+using WeatherService.Data;
 using WeatherService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +56,11 @@ builder.Services
     .AddAuthorizationBuilder()
     .AddPolicy("ManagerOnly", policy => policy.RequireClaim(FarmClaimTypes.Role, "Manager"))
     .AddPolicy("ManagerAndWorkers", policy => policy.RequireClaim(FarmClaimTypes.Role, "Worker", "Manager"));
+
+// Add DbContext
+builder.Services.AddDbContext<WeatherDbContext>(
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 // Register IHttpContextAccessor (required for FarmAuthorizationService)
 builder.Services.AddHttpContextAccessor();

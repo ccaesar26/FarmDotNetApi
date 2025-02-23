@@ -1,0 +1,277 @@
+[
+  {
+    "id": "b5161541-ffbe-4d2c-9193-91718b582e07",
+    "code": 200,
+    "description": "Thunderstorm with Light Rain"
+  },
+  {
+    "id": "678d3198-ea25-45c8-b24d-7f367cbb4dff",
+    "code": 201,
+    "description": "Thunderstorm with Rain"
+  },
+  {
+    "id": "292867e0-615f-45cb-80db-22855bb1f71b",
+    "code": 202,
+    "description": "Thunderstorm with Heavy Rain"
+  },
+  {
+    "id": "06e0821d-f15c-4756-b8fd-65ca910bb6ac",
+    "code": 210,
+    "description": "Light Thunderstorm"
+  },
+  {
+    "id": "4684aec1-dc06-4ade-a552-1e754e9374b6",
+    "code": 211,
+    "description": "Thunderstorm"
+  },
+  {
+    "id": "bab564ec-5747-4436-a7dd-aa87fcec8d22",
+    "code": 212,
+    "description": "Heavy Thunderstorm"
+  },
+  {
+    "id": "7d4e8756-8535-4dc8-965f-318a9dd71271",
+    "code": 221,
+    "description": "Ragged Thunderstorm"
+  },
+  {
+    "id": "33e7fb23-f5f6-49a6-b5cc-d119549f00ff",
+    "code": 230,
+    "description": "Thunderstorm with Light Drizzle"
+  },
+  {
+    "id": "d8bb964b-0edd-4f67-a777-095127592bce",
+    "code": 231,
+    "description": "Thunderstorm with Drizzle"
+  },
+  {
+    "id": "24c15e95-56c9-4c6b-837d-ab19ebda234d",
+    "code": 232,
+    "description": "Thunderstorm with Heavy Drizzle"
+  },
+  {
+    "id": "80857ca8-ec32-4d91-96af-12342ee5ec85",
+    "code": 300,
+    "description": "Light Intensity Drizzle"
+  },
+  {
+    "id": "520694f4-ba86-4f7a-8920-db84f888d02b",
+    "code": 301,
+    "description": "Drizzle"
+  },
+  {
+    "id": "073e1e27-21ed-49ff-abff-10933ba85f58",
+    "code": 302,
+    "description": "Heavy Intensity Drizzle"
+  },
+  {
+    "id": "7585bdf0-a107-4e7c-a1da-b95b9877b2ff",
+    "code": 310,
+    "description": "Light Intensity Drizzle Rain"
+  },
+  {
+    "id": "e64908cd-ee14-4377-bd37-00eca0a89418",
+    "code": 311,
+    "description": "Drizzle Rain"
+  },
+  {
+    "id": "c3a1cb5e-1955-48a9-9796-6512d6219b25",
+    "code": 312,
+    "description": "Heavy Intensity Drizzle Rain"
+  },
+  {
+    "id": "a06a9756-0c93-4882-ac6a-6778034db9d2",
+    "code": 313,
+    "description": "Shower Rain and Drizzle"
+  },
+  {
+    "id": "b0a531f0-0601-46a3-a66f-12716a032d7a",
+    "code": 314,
+    "description": "Heavy Shower Rain and Drizzle"
+  },
+  {
+    "id": "c85c54d8-9a6d-4983-86ec-1bf2761adbf8",
+    "code": 321,
+    "description": "Shower Drizzle"
+  },
+  {
+    "id": "51c5e2d6-b73e-443e-85e5-e73f4a2a72ef",
+    "code": 500,
+    "description": "Light Rain"
+  },
+  {
+    "id": "3330fe49-af7b-43fc-8541-5776a3089f36",
+    "code": 501,
+    "description": "Moderate Rain"
+  },
+  {
+    "id": "8232f5df-9b3e-4919-a02c-e65ca55b9db5",
+    "code": 502,
+    "description": "Heavy Intensity Rain"
+  },
+  {
+    "id": "a6596cb7-6634-49fb-aeb5-b3b52e47b1f6",
+    "code": 503,
+    "description": "Very Heavy Rain"
+  },
+  {
+    "id": "72e6ee2f-5d8b-41ee-8b25-2a57f30b8580",
+    "code": 504,
+    "description": "Extreme Rain"
+  },
+  {
+    "id": "da3b8ab0-9540-4f3a-80f2-b0d997e7d330",
+    "code": 511,
+    "description": "Freezing Rain"
+  },
+  {
+    "id": "a92f7924-c9ad-4b4c-bf3a-8ad70e82b3a8",
+    "code": 520,
+    "description": "Light Intensity Shower Rain"
+  },
+  {
+    "id": "3ccd2a6e-98d2-459a-9286-b620f60aa651",
+    "code": 521,
+    "description": "Shower Rain"
+  },
+  {
+    "id": "5e8bde3f-5b77-456e-8f66-ab2367925e72",
+    "code": 522,
+    "description": "Heavy Intensity Shower Rain"
+  },
+  {
+    "id": "23269a89-4f71-4724-8032-e2bd3d018175",
+    "code": 531,
+    "description": "Ragged Shower Rain"
+  },
+  {
+    "id": "d9cd569a-9275-4ca4-affb-6f9ed9fb69f8",
+    "code": 600,
+    "description": "Light Snow"
+  },
+  {
+    "id": "c9973551-23ca-4602-bd5f-a966bbff0d22",
+    "code": 601,
+    "description": "Snow"
+  },
+  {
+    "id": "1a43f9eb-f09d-486c-a28b-ff468fb8b029",
+    "code": 602,
+    "description": "Heavy Snow"
+  },
+  {
+    "id": "dd2e857b-112c-467e-8acc-48db5e34c7be",
+    "code": 611,
+    "description": "Sleet"
+  },
+  {
+    "id": "c04207a8-ab27-44cd-9316-24c24c0ae810",
+    "code": 612,
+    "description": "Light Shower Sleet"
+  },
+  {
+    "id": "abe8d0b0-5d6f-49df-bdd7-414a4f3e4d75",
+    "code": 613,
+    "description": "Shower Sleet"
+  },
+  {
+    "id": "9122e533-2fc8-4ee4-bb48-349b29717f96",
+    "code": 615,
+    "description": "Light Rain and Snow"
+  },
+  {
+    "id": "9ec1450e-f188-4081-ba13-95c2090c271e",
+    "code": 616,
+    "description": "Rain and Snow"
+  },
+  {
+    "id": "fc532483-ebea-477c-aa70-cbe8d4221bfc",
+    "code": 620,
+    "description": "Light Shower Snow"
+  },
+  {
+    "id": "8d6fbdba-795a-4df1-9cfd-8fb44cd87dc6",
+    "code": 621,
+    "description": "Shower Snow"
+  },
+  {
+    "id": "ac4cf491-a4f7-4cbe-93aa-c5e190a24398",
+    "code": 622,
+    "description": "Heavy Shower Snow"
+  },
+  {
+    "id": "5d70a2c3-ae5c-49b1-8b4b-696816c756ae",
+    "code": 701,
+    "description": "Mist"
+  },
+  {
+    "id": "99a9a8cc-1a2c-475b-a8c3-5d576d1445bf",
+    "code": 711,
+    "description": "Smoke"
+  },
+  {
+    "id": "771f3da4-b6e9-4020-a011-71b4ed2c857e",
+    "code": 721,
+    "description": "Haze"
+  },
+  {
+    "id": "0f25b3e8-847e-4413-be5e-adb2fb495cef",
+    "code": 731,
+    "description": "Dust Whirls"
+  },
+  {
+    "id": "0e889e17-bcfe-482c-9ef7-11fd773f1e60",
+    "code": 741,
+    "description": "Fog"
+  },
+  {
+    "id": "77b27b8d-1682-48a4-8559-f1cfcc5b2da1",
+    "code": 751,
+    "description": "Sand"
+  },
+  {
+    "id": "c642f621-5c5a-4cf7-84a2-cfadbeb987aa",
+    "code": 761,
+    "description": "Dust"
+  },
+  {
+    "id": "7d533931-5fe0-481f-86cd-43b7aa706da2",
+    "code": 762,
+    "description": "Volcanic Ash"
+  },
+  {
+    "id": "2161da88-043d-45e1-ac81-970ba5607e24",
+    "code": 771,
+    "description": "Squalls"
+  },
+  {
+    "id": "4578d765-789d-498d-b870-7c5caf6f711a",
+    "code": 781,
+    "description": "Tornado"
+  },
+  {
+    "id": "d6206c0a-f658-4f5d-a3b5-f9928223c2f5",
+    "code": 800,
+    "description": "Clear Sky"
+  },
+  {
+    "id": "3966d956-a724-49fd-ac17-322ac96c5716",
+    "code": 801,
+    "description": "Few Clouds"
+  },
+  {
+    "id": "920db400-d83e-4434-a9b7-a4ac705d51f2",
+    "code": 802,
+    "description": "Scattered Clouds"
+  },
+  {
+    "id": "eafacba8-5812-445a-909d-ecdbdb487d9e",
+    "code": 803,
+    "description": "Broken Clouds"
+  },
+  {
+    "id": "ddd91007-1614-4a14-90dc-8fa2f51a9988",
+    "code": 804,
+    "description": "Overcast Clouds"
+  }
+]

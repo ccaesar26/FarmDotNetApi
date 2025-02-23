@@ -9,12 +9,38 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.2" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Assets\Animations\clouds-night.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\foggy.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\mist.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\night.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\partly-cloudy.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\partly-shower.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\rainy-night.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\snow-night.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\snow-sunny.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\snow.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\storm-showers-day.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\storm.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\sunny.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\thunder.json" />
+      <_ContentIncludedByDefault Remove="Assets\Animations\windy.json" />
+      <_ContentIncludedByDefault Remove="Assets\WeatherAnimations.json" />
+      <_ContentIncludedByDefault Remove="Assets\WeatherConditions.json" />
     </ItemGroup>
 
 </Project>

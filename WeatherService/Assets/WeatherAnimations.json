@@ -1,0 +1,121 @@
+[
+  {
+    "id": "d8aa2288-e5ff-4881-9baf-e821d45448e9",
+    "filename": "storm-showers-day.json",
+    "codes": [
+      200,
+      221,
+      230
+    ]
+  },
+  {
+    "id": "df76c5a1-31d3-4837-b743-0ce03aadf74f",
+    "filename": "storm.json",
+    "codes": [
+      201,
+      202,
+      231,
+      232
+    ]
+  },
+  {
+    "id": "e3a5ef78-bbce-4292-89d4-6cda4a1a81b4",
+    "filename": "thunder.json",
+    "codes": [
+      210,
+      211,
+      212
+    ]
+  },
+  {
+    "id": "582389ca-da8d-44f6-bbbd-b176de03d49d",
+    "filename": "partly-shower.json",
+    "filenamedark": "rainy-night.json",
+    "codes": [
+      300,
+      301,
+      302,
+      310,
+      311,
+      312,
+      313,
+      314,
+      321,
+      500,
+      501,
+      502,
+      503,
+      504,
+      520,
+      521,
+      522,
+      531
+    ]
+  },
+  {
+    "id": "da025bfd-daa4-4fac-8d4b-77bc9d9b7620",
+    "filename": "snow-sunny.json",
+    "filenamedark": "snow-night.json",
+    "codes": [
+      511,
+      600,
+      601,
+      602,
+      611,
+      612,
+      613,
+      615,
+      616,
+      620,
+      621,
+      622
+    ]
+  },
+  {
+    "id": "78215293-8af6-4730-8223-c7478d107e8f",
+    "filename": "mist.json",
+    "codes": [
+      711,
+      741,
+      751,
+      761,
+      762
+    ]
+  },
+  {
+    "id": "fef5fa7d-0a36-41b0-a719-565dadfdeaca",
+    "filename": "foggy.json",
+    "codes": [
+      701,
+      721,
+      731,
+      771,
+      781
+    ]
+  },
+  {
+    "id": "77fd2783-d960-48f1-b3ba-a39e427bc414",
+    "filename": "sunny.json",
+    "filenamedark": "night.json",
+    "codes": [
+      800
+    ]
+  },
+  {
+    "id": "911286ca-f33c-44af-a38a-f5fcc53fe4fe",
+    "filename": "partly-cloudy.json",
+    "filenamedark": "clouds-night.json",
+    "codes": [
+      801,
+      802
+    ]
+  },
+  {
+    "id": "e8a2c3ee-de99-4db1-83c9-b41892477dff",
+    "filename": "windy.json",
+    "codes": [
+      803,
+      804
+    ]
+  }
+]
