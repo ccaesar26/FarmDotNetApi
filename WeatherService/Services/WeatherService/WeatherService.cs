@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using WeatherService.Extensions;
 using WeatherService.Models.Dtos;
 
-namespace WeatherService.Services;
+namespace WeatherService.Services.WeatherService;
 
 public class WeatherService(
     HttpClient httpClient,

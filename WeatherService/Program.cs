@@ -5,7 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using Shared.FarmClaimTypes;
 using WeatherService.Converters;
 using WeatherService.Data;
+using WeatherService.Repositories;
 using WeatherService.Services;
+using WeatherService.Services.WeatherConditionService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,7 +71,10 @@ builder.Services.AddHttpClient<IWeatherService>();
 
 builder.Services.Configure<IWeatherService>(builder.Configuration);
 
-builder.Services.AddScoped<IWeatherService, WeatherService.Services.WeatherService>();
+builder.Services.AddScoped<IWeatherConditionRepository, WeatherConditionRepository>();
+
+builder.Services.AddScoped<IWeatherConditionService, WeatherConditionService>();
+builder.Services.AddScoped<IWeatherService, WeatherService.Services.WeatherService.WeatherService>();
 
 builder.Services.AddMemoryCache();
 

@@ -19,5 +19,5 @@ public class WeatherCondition
     public Guid AnimationId { get; init; } 
     
     [ForeignKey(nameof(AnimationId))]
-    public WeatherAnimation? Animation { get; init; }
+    public WeatherAnimation Animation { get; init; }
 }

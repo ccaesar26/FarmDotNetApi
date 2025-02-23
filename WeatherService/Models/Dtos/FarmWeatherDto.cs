@@ -10,5 +10,25 @@ public record FarmWeatherDto(
     double WindGust,
     int CloudCoverage,
     TimeOnly Sunrise,
-    TimeOnly Sunset
-);
+    TimeOnly Sunset,
+    int Code
+)
+{
+    public WeatherResponse ToWeatherResponse()
+    {
+        return new WeatherResponse(
+            Location,
+            Temperature,
+            FeelsLike,
+            Humidity,
+            Pressure,
+            WindSpeed,
+            WindGust,
+            CloudCoverage,
+            Sunrise,
+            Sunset,
+            string.Empty,
+            string.Empty
+        );
+    }
+}
