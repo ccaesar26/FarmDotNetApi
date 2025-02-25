@@ -2,12 +2,15 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 using Shared.FarmClaimTypes;
 using WeatherService.Converters;
 using WeatherService.Data;
 using WeatherService.Repositories;
 using WeatherService.Services;
 using WeatherService.Services.WeatherConditionService;
+using WeatherService.Services.WeatherHub;
+using WeatherService.Services.WeatherJobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,11 +86,35 @@ builder.Services
     .AddControllers()
     .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter()); });
 
+// Add SignalR
+builder.Services.AddSignalR();
+
+// Add Quartz
+builder.Services.AddQuartz(q =>
+{
+    // Register the job and trigger
+    var jobKey = new JobKey("WeatherUpdateJob");
+    q.AddJob<WeatherUpdateJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("WeatherUpdateTrigger")
+        .WithSimpleSchedule(x => x
+            .WithIntervalInMinutes(10)  // Fetch weather every 10 minutes
+            .RepeatForever()));
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+builder.Services.AddScoped<WeatherUpdateJob>(); // Register job
+
 var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<WeatherHub>("/weatherHub");
 
 app.Run();
