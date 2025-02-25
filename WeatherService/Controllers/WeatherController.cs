@@ -14,41 +14,51 @@ public class WeatherController(
     IWeatherConditionService weatherConditionService
 ) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetWeather(WeatherRequest request)
+    [HttpGet("current/{city}")]
+    public async Task<IActionResult> GetWeatherByCity(string city)
     {
-        var weatherData = request.Latitude is not null && request.Longitude is not null
-            ? await weatherService.GetWeatherAsync(request.Latitude.Value, request.Longitude.Value)
-            : request.City is not null
-                ? await weatherService.GetWeatherAsync(request.City)
-                : null;
+        var weatherData = await weatherService.GetWeatherAsync(city);
 
         if (weatherData is null)
-        {
-            return request.City is null && request.Latitude is null && request.Longitude is null
-                ? BadRequest("City, latitude, or longitude must be provided.")
-                : NotFound("Weather data unavailable.");
-        }
+            return NotFound($"Weather data unavailable for city: {city}.");
 
+        return await BuildWeatherResponse(weatherData);
+    }
+
+    [HttpGet("current")]
+    public async Task<IActionResult> GetWeatherByCoordinates([FromQuery] double latitude, [FromQuery] double longitude)
+    {
+        var weatherData = await weatherService.GetWeatherAsync(latitude, longitude);
+
+        if (weatherData is null)
+            return NotFound($"Weather data unavailable for coordinates: {latitude}, {longitude}.");
+
+        return await BuildWeatherResponse(weatherData);
+    }
+    
+    
+    private async Task<IActionResult> BuildWeatherResponse(FarmWeatherDto weatherData)
+    {
         var weatherCondition = await weatherConditionService.GetWeatherConditionAsync(weatherData.Code);
-        
+
         if (weatherCondition is null)
-        {
             return NotFound("Weather condition unavailable.");
-        }
 
         var response = weatherData.ToWeatherResponse();
-        
-        var isDarkAvailable = weatherCondition.Animation.FilenameDark is not null;
-        
+
+        var isDarkAvailable = weatherCondition.Animation.LottieDataDark is not null && 
+                              weatherCondition.Animation.LottieDataDark != string.Empty;
+
         response = response with
         {
-            LottieAnimation = (isDarkAvailable
-                ? weatherCondition.Animation.LottieData
-                : weatherCondition.Animation.LottieDataDark)!,
-            Description = weatherCondition.Description
+            LottieAnimationName = (isDarkAvailable && !weatherData.IsDay()
+                ? weatherCondition.Animation.FilenameDark
+                : weatherCondition.Animation.Filename)!,
+            LottieAnimation = (isDarkAvailable && !weatherData.IsDay()
+                ? weatherCondition.Animation.LottieDataDark
+                : weatherCondition.Animation.LottieData)!
         };
-        
+
         return Ok(response);
     }
 }

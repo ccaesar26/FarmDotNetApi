@@ -1,5 +1,6 @@
 ﻿using FieldsService.Models.Dtos;
 using FieldsService.Services;
+using FieldsService.Services.GeocodingService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;
@@ -11,6 +12,7 @@ namespace FieldsService.Controllers;
 [Route("/api/[controller]")]
 public class FieldsController(
     IFieldsService fieldsService,
+    IGeocodingService geocodingService,
     IFarmAuthorizationService farmAuthorizationService
 ) : ControllerBase
 {
@@ -155,5 +157,29 @@ public class FieldsController(
 
         var coordinates = await fieldsService.GetFieldsCoordinatesAsync(farmId.Value);
         return Ok(new { coordinates });
+    }
+    
+    [HttpGet("cities")]
+    public async Task<IActionResult> GetFieldsCitiesAsync()
+    {
+        var farmId = farmAuthorizationService.GetUserFarmId();
+        if (farmId is null)
+        {
+            return Forbid("You are not authorized to view fields for this farm.");
+        }
+
+        var coordinates = await fieldsService.GetFieldsCoordinatesAsync(farmId.Value);
+        
+        var cities = new HashSet<GeocodingResult>();
+        foreach (var coordinate in coordinates)
+        {
+            var city = await geocodingService.GetCityByCoordinatesAsync(coordinate.Y, coordinate.X);
+            if (city != null)
+            {
+                cities.Add(city);
+            }
+        }
+        
+        return Ok(cities.ToList());
     }
 }

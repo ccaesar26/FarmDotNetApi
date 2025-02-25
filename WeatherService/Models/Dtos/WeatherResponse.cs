@@ -11,6 +11,7 @@ public record WeatherResponse(
     int CloudCoverage,
     TimeOnly Sunrise,
     TimeOnly Sunset,
+    string LottieAnimationName,
     string LottieAnimation,
     string Description
 );

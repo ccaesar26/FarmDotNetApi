@@ -28,7 +28,14 @@ public record FarmWeatherDto(
             Sunrise,
             Sunset,
             string.Empty,
+            string.Empty,
             string.Empty
         );
+    }
+
+    public bool IsDay()
+    {
+        var now = TimeOnly.FromDateTime(DateTime.UtcNow);
+        return now >= Sunrise && now <= Sunset;
     }
 }

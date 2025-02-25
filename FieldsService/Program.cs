@@ -2,6 +2,7 @@ using System.Text;
 using FieldsService.Data;
 using FieldsService.Repositories;
 using FieldsService.Services;
+using FieldsService.Services.GeocodingService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -61,6 +62,12 @@ builder.Services.AddDbContext<FieldsDbContext>(options =>
 // Register IHttpContextAccessor (required for FarmAuthorizationService)
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddHttpClient<IGeocodingService>();
+
+builder.Services.Configure<IGeocodingService>(builder.Configuration);
+
+builder.Services.AddScoped<IGeocodingService, GeocodingService>();
+
 // Register FarmAuthorizationService as a Scoped service
 builder.Services.AddScoped<IFarmAuthorizationService, FarmAuthorizationService>();
 
@@ -69,6 +76,8 @@ builder.Services.AddScoped<IFieldsRepository, FieldsRepository>();
 
 // Add services
 builder.Services.AddScoped<IFieldsService, FieldsService.Services.FieldsService>();
+
+builder.Services.AddMemoryCache();
 
 // Add controllers
 builder.Services
