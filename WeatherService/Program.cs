@@ -86,6 +86,18 @@ builder.Services
     .AddControllers()
     .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter()); });
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .WithOrigins("http://localhost:4200", "http://localhost:5800"); // Angular & Ocelot
+    });
+});
+
 // Add SignalR
 builder.Services.AddSignalR();
 
@@ -100,7 +112,7 @@ builder.Services.AddQuartz(q =>
         .ForJob(jobKey)
         .WithIdentity("WeatherUpdateTrigger")
         .WithSimpleSchedule(x => x
-            .WithIntervalInMinutes(10)  // Fetch weather every 10 minutes
+            .WithIntervalInMinutes(5)
             .RepeatForever()));
 });
 
@@ -110,11 +122,16 @@ builder.Services.AddScoped<WeatherUpdateJob>(); // Register job
 
 var app = builder.Build();
 
+app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<WeatherHub>("/weatherHub");
+app.UseCors("CorsPolicy"); // Apply CORS policy
+
+
+app.UseEndpoints(endpoints => { endpoints.MapHub<WeatherHub>("/weatherHub"); });
 
 app.Run();

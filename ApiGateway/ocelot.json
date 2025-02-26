@@ -102,6 +102,21 @@
       ]
     },
     {
+      "DownstreamPathTemplate": "/weatherHub",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5805
+        }
+      ],
+      "UpstreamPathTemplate": "/weatherHub",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
       "DownstreamPathTemplate": "/api/config/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
