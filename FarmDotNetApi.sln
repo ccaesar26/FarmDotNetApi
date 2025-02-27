@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurationService", "Con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherService", "WeatherService\WeatherService.csproj", "{608A3806-1B88-4244-B8B4-CDBF1A04199A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClimateIndicesService", "ClimateIndicesService\ClimateIndicesService.csproj", "{F32E4728-4DFC-473B-86E7-8277F2323A55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{608A3806-1B88-4244-B8B4-CDBF1A04199A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{608A3806-1B88-4244-B8B4-CDBF1A04199A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{608A3806-1B88-4244-B8B4-CDBF1A04199A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F32E4728-4DFC-473B-86E7-8277F2323A55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F32E4728-4DFC-473B-86E7-8277F2323A55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F32E4728-4DFC-473B-86E7-8277F2323A55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F32E4728-4DFC-473B-86E7-8277F2323A55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
