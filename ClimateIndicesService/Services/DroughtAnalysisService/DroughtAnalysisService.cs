@@ -1,6 +1,8 @@
 ﻿using ClimateIndicesService.Data;
 using ClimateIndicesService.Models;
+using MaxRev.Gdal.Core;
 using OSGeo.GDAL;
+
 
 namespace ClimateIndicesService.Services.DroughtAnalysisService;
 
@@ -13,7 +15,16 @@ public class DroughtAnalysisService : IDroughtAnalysisService
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        Gdal.AllRegister();
+        try
+        {
+            GdalBase.ConfigureAll();
+            Console.WriteLine($"GDAL Version: {Gdal.VersionInfo("")}"); // Good for verification
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"GDAL Initialization Failed: {ex.Message}");
+            // Handle the error appropriately (e.g., log it, display an error message, exit the application).
+        }
     }
 
     public async ValueTask<DroughtLevelInfo> ComputeDroughtLevelForCoordinates(byte[] raster, double lon, double lat)

@@ -77,16 +77,16 @@ public class FieldsController(
         return Ok(field);
     }
 
-    [HttpGet("farm/{farmId:guid}")]
-    public async Task<IActionResult> GetFieldsAsync(Guid farmId)
+    [HttpGet("all")]
+    public async Task<IActionResult> GetFieldsAsync()
     {
         var userFarmId = farmAuthorizationService.GetUserFarmId();
-        if (farmId != userFarmId)
+        if (userFarmId is null)
         {
             return Forbid("You are not authorized to view fields for this farm.");
         }
 
-        var fields = await fieldsService.GetFieldsByFarmIdAsync(farmId);
+        var fields = await fieldsService.GetFieldsByFarmIdAsync(userFarmId.Value);
         return Ok(fields);
     }
 
