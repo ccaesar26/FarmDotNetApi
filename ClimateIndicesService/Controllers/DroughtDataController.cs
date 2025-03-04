@@ -18,7 +18,7 @@ public class DroughtDataController(
     ILogger<DroughtDataController> logger
 ) : ControllerBase
 {
-    [HttpGet("drought-record")] // GET /DroughtData/droughtdata
+    [HttpGet("drought-record")]
     public async ValueTask<IActionResult> GetDroughtRecord()
     {
         try
