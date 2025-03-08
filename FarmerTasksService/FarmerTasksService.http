@@ -1,0 +1,6 @@
+@FarmerTasksService_HostAddress = http://localhost:5163
+
+GET {{FarmerTasksService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
