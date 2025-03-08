@@ -25,4 +25,6 @@ public class UserProfile
     public required string Gender { get; set; }
     
     public Guid? UserId { get; set; }
+    
+    public ICollection<ProfileAttribute> ProfileAttributes { get; set; } = new List<ProfileAttribute>();
 }

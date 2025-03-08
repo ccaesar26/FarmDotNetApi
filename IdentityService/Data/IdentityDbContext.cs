@@ -1,4 +1,5 @@
 ﻿using IdentityService.Models;
+using IdentityService.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityService.Data;

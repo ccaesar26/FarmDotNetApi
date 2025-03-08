@@ -10,4 +10,5 @@ public interface IUserRepository
     
     public Task UpdateUserAsync(User? user);
     Task<User?> GetUserByIdAsync(Guid id);
+    ValueTask<Guid> CreateUserAsync(User user);
 }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace IdentityService.Models;
+namespace IdentityService.Models.Entities;
 
 public class Role
 {

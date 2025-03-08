@@ -19,7 +19,7 @@ public class FieldsController(
     [HttpGet("debug-manager-only"), Authorize(Policy = "ManagerOnly")]
     public IActionResult DebugManagerOnly()
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         return Ok(new { farmId });
     }
 
@@ -34,7 +34,7 @@ public class FieldsController(
     [HttpGet("has-farm")]
     public IActionResult HasFarm()
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         return Ok(new { farmId });
     }
 
@@ -42,7 +42,7 @@ public class FieldsController(
     [HttpPost("create")]
     public async Task<IActionResult> CreateFieldAsync([FromBody] CreateFieldRequest request)
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         if (farmId is null)
         {
             return Forbid("You are not authorized to create fields for this farm.");
@@ -68,7 +68,7 @@ public class FieldsController(
             return NotFound();
         }
 
-        var userFarmId = farmAuthorizationService.GetUserFarmId();
+        var userFarmId = farmAuthorizationService.GetFarmId();
         if (field.FarmId != userFarmId)
         {
             return Forbid("You are not authorized to view this field.");
@@ -80,7 +80,7 @@ public class FieldsController(
     [HttpGet("all")]
     public async Task<IActionResult> GetFieldsAsync()
     {
-        var userFarmId = farmAuthorizationService.GetUserFarmId();
+        var userFarmId = farmAuthorizationService.GetFarmId();
         if (userFarmId is null)
         {
             return Forbid("You are not authorized to view fields for this farm.");
@@ -94,7 +94,7 @@ public class FieldsController(
     [HttpPut("{fieldId:guid}")]
     public async Task<IActionResult> UpdateFieldAsync(Guid fieldId, [FromBody] UpdateFieldRequest request)
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         if (request.FarmId != farmId)
         {
             return Forbid("You are not authorized to update fields for this farm.");
@@ -115,7 +115,7 @@ public class FieldsController(
     [HttpDelete("{fieldId:guid}")]
     public async Task<IActionResult> DeleteFieldAsync(Guid fieldId)
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         var field = await fieldsService.GetFieldByIdAsync(fieldId);
         if (field != null && farmId != field.FarmId)
         {
@@ -136,7 +136,7 @@ public class FieldsController(
     [HttpGet("exists/{farmId:guid}/{fieldName}")]
     public async Task<IActionResult> FieldNameExistsAsync(Guid farmId, string fieldName)
     {
-        var userFarmId = farmAuthorizationService.GetUserFarmId();
+        var userFarmId = farmAuthorizationService.GetFarmId();
         if (farmId != userFarmId)
         {
             return Forbid("You are not authorized to check fields for this farm.");
@@ -149,7 +149,7 @@ public class FieldsController(
     [HttpGet("coordinates")]
     public async Task<IActionResult> GetFieldCoordinatesAsync()
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         if (farmId is null)
         {
             return Forbid("You are not authorized to view fields for this farm.");
@@ -162,7 +162,7 @@ public class FieldsController(
     [HttpGet("cities")]
     public async Task<IActionResult> GetFieldsCitiesAsync()
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         if (farmId is null)
         {
             return Forbid("You are not authorized to view fields for this farm.");

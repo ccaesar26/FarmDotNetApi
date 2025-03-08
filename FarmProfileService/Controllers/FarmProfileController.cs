@@ -46,7 +46,7 @@ public class FarmProfileController(
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetFarmProfileAsync(Guid id)
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         if (id != farmId)
         {
             return Forbid("You are not authorized to create fields for this farm.");
@@ -65,7 +65,7 @@ public class FarmProfileController(
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateFarmProfileAsync(Guid id, [FromBody] UpdateFarmProfileRequest request)
     {
-        var farmId = farmAuthorizationService.GetUserFarmId();
+        var farmId = farmAuthorizationService.GetFarmId();
         if (id != farmId)
         {
             return Forbid("You are not authorized to create fields for this farm.");

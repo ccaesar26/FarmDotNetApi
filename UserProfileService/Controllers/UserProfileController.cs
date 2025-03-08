@@ -16,39 +16,34 @@ namespace UserProfileService.Controllers;
 public class UserProfileController(
     IUserProfileService userProfileService,
     IFarmAuthorizationService farmAuthorizationService,
-    IBus bus,
     IPublishEndpoint publishEndpoint
 ) : ControllerBase
 {
-    [HttpPost("debug-create")]
-    public async Task<IActionResult> CreateUserProfileAsync()
-    {
-        var id = Guid.NewGuid();
-        
-        await publishEndpoint.Publish(new UserProfileCreatedEvent(id, id));
-        
-        return Ok();
-    }
-
     [HttpPost("create"), Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> CreateUserProfileAsync([FromBody] CreateUserProfileRequest request)
     {
-        var userId = farmAuthorizationService.GetUserId();
+        var userId = farmAuthorizationService.GetUserId(); // This is the manager's user id
         if (!userId.HasValue)
         {
             return Unauthorized();
         }
         
-        var id = await userProfileService.AddUserProfileAsync(
+        if (request.UserId is not null) // This means that a manager is creating a profile for a worker
+        {
+            userId = Guid.Parse(request.UserId);
+        }
+
+        var userProfileId = await userProfileService.AddUserProfileAsync(
             request.Name,
             request.DateOfBirth,
             request.Gender,
-            userId.Value
+            userId.Value,
+            request.Role
         );
-        
-        await publishEndpoint.Publish(new UserProfileCreatedEvent(userId.Value, id));
 
-        return Ok();
+        await publishEndpoint.Publish(new UserProfileCreatedEvent(userId.Value, userProfileId));
+
+        return Ok(new { userProfileId });
     }
 
     [HttpGet]
@@ -59,7 +54,7 @@ public class UserProfileController(
         {
             return Unauthorized();
         }
-        
+
         var userProfile = await userProfileService.GetUserProfileByUserIdAsync(userId.Value);
         if (userProfile is null)
         {
@@ -68,7 +63,7 @@ public class UserProfileController(
 
         return Ok(userProfile.ToDto());
     }
-    
+
     [HttpGet("user/{userId:guid}")]
     public async Task<IActionResult> GetUserProfileByUserIdAsync(Guid userId)
     {
@@ -94,12 +89,45 @@ public class UserProfileController(
 
         return Ok();
     }
-    
+
     [HttpDelete("{id:guid}"), Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> DeleteUserProfileAsync(Guid id)
     {
         await userProfileService.DeleteUserProfileAsync(id);
 
         return Ok();
+    }
+
+    [HttpPost("attributes/assign"), Authorize(Policy = "ManagerOnly")]
+    public async Task<IActionResult> AssignAttributeAsync([FromBody] AssignAttributesRequest request)
+    {
+        try
+        {
+            await userProfileService.AssignAttributesAsync(Guid.Parse(request.UserProfileId), request.AttributeNames);
+            return Ok();
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest(new { message = e.Message });
+        }
+    }
+
+    [HttpPost("attributes/remove/{userId}"), Authorize(Policy = "ManagerOnly")]
+    public async Task<IActionResult> RemoveAttributeAsync(string userId, [FromBody] RemoveAttributesRequest request)
+    {
+        await userProfileService.RemoveAttributesAsync(Guid.Parse(userId), request.AttributeIds);
+
+        return Ok();
+    }
+    
+    [HttpGet("attributes")]
+    public async Task<IActionResult> GetAttributesAsync()
+    {
+        var attributes = await userProfileService.GetAttributesAsync();
+        
+        var attributeMap = attributes.GroupBy(a => a.Category)
+            .ToDictionary(g => g.Key.Name, g => g.Select(a => a.Name).ToList());
+        
+        return Ok(attributeMap);
     }
 }

@@ -2,7 +2,7 @@
 
 public interface IFarmAuthorizationService
 {
-    Guid? GetUserFarmId();
+    Guid? GetFarmId();
 
     public Guid? GetUserId();
 }

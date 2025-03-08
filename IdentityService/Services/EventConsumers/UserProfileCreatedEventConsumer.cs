@@ -5,7 +5,8 @@ using Shared.Models.Events;
 namespace IdentityService.Services.EventConsumers;
 
 public class UserProfileCreatedEventConsumer(
-    IUserService userService
+    IUserService userService,
+    IPublishEndpoint publishEndpoint
 ) : IConsumer<UserProfileCreatedEvent>
 {
     public async Task Consume(ConsumeContext<UserProfileCreatedEvent> context)

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UserProfileService.Data;
@@ -11,9 +12,11 @@ using UserProfileService.Data;
 namespace UserProfileService.Migrations
 {
     [DbContext(typeof(UserProfileDbContext))]
-    partial class UserProfileDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250306110852_Added_Attributes")]
+    partial class Added_Attributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,31 +61,31 @@ namespace UserProfileService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a1ef0f83-97a7-49c5-b0bd-2f6fbd6cd102"),
+                            Id = new Guid("e41c22a3-7d8d-4d25-b0b2-3b23a5eebe9b"),
                             IsPredefined = true,
                             Name = "General Farm Labor"
                         },
                         new
                         {
-                            Id = new Guid("e7aa259c-8b80-4a74-a99e-78d42f330a7c"),
+                            Id = new Guid("f6f8f617-1f24-475d-8366-b6476cc00ee9"),
                             IsPredefined = true,
                             Name = "Crop-Specific Roles"
                         },
                         new
                         {
-                            Id = new Guid("04c71678-4205-4a37-817b-92d05dc9fd72"),
+                            Id = new Guid("f343ab87-eb1b-42fd-b11a-982ac0832fc0"),
                             IsPredefined = true,
                             Name = "Equipment Specialization"
                         },
                         new
                         {
-                            Id = new Guid("fee5d6bf-3a86-4800-a309-d0b0a4af5168"),
+                            Id = new Guid("4f957bf9-5829-4cb8-8b6f-e78fae5d1b9c"),
                             IsPredefined = true,
                             Name = "Role"
                         },
                         new
                         {
-                            Id = new Guid("da69270b-6390-428f-92ed-b077f512d31f"),
+                            Id = new Guid("aa9487ef-7e74-467a-9e15-068db3529f02"),
                             IsPredefined = false,
                             Name = "Custom"
                         });
@@ -114,120 +117,120 @@ namespace UserProfileService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("59a1672f-0c87-4ec5-b52e-1ec09065c7ee"),
-                            CategoryId = new Guid("a1ef0f83-97a7-49c5-b0bd-2f6fbd6cd102"),
+                            Id = new Guid("bc589e44-3c9a-436d-ac77-836f67ee80b3"),
+                            CategoryId = new Guid("e41c22a3-7d8d-4d25-b0b2-3b23a5eebe9b"),
                             IsPredefined = true,
                             Name = "General Farmhand/Laborer"
                         },
                         new
                         {
-                            Id = new Guid("f5596fd6-ae03-4927-8a13-68e012a37d9d"),
-                            CategoryId = new Guid("a1ef0f83-97a7-49c5-b0bd-2f6fbd6cd102"),
+                            Id = new Guid("c2e5fb01-897d-4f17-b064-b6290663fef1"),
+                            CategoryId = new Guid("e41c22a3-7d8d-4d25-b0b2-3b23a5eebe9b"),
                             IsPredefined = true,
                             Name = "Field Worker"
                         },
                         new
                         {
-                            Id = new Guid("2366a79e-5332-4b68-897e-e7de174fa69c"),
-                            CategoryId = new Guid("a1ef0f83-97a7-49c5-b0bd-2f6fbd6cd102"),
+                            Id = new Guid("a91a5b91-cddb-44a1-a538-5568db16d8e5"),
+                            CategoryId = new Guid("e41c22a3-7d8d-4d25-b0b2-3b23a5eebe9b"),
                             IsPredefined = true,
                             Name = "Equipment Operator"
                         },
                         new
                         {
-                            Id = new Guid("bd820d62-3e3c-4fad-9ad5-187fb055d9bf"),
-                            CategoryId = new Guid("a1ef0f83-97a7-49c5-b0bd-2f6fbd6cd102"),
+                            Id = new Guid("98444a92-b679-44dc-91ba-7a69d0f561a2"),
+                            CategoryId = new Guid("e41c22a3-7d8d-4d25-b0b2-3b23a5eebe9b"),
                             IsPredefined = true,
                             Name = "Maintenance Worker"
                         },
                         new
                         {
-                            Id = new Guid("3c4b4a67-d9f4-4b10-bc52-8be1f5de2643"),
-                            CategoryId = new Guid("a1ef0f83-97a7-49c5-b0bd-2f6fbd6cd102"),
+                            Id = new Guid("32e8183f-90b2-4334-86c3-4d27c7b75b6f"),
+                            CategoryId = new Guid("e41c22a3-7d8d-4d25-b0b2-3b23a5eebe9b"),
                             IsPredefined = true,
                             Name = "Irrigation Technician"
                         },
                         new
                         {
-                            Id = new Guid("19467a7f-2707-42be-8f7d-a179014936db"),
-                            CategoryId = new Guid("a1ef0f83-97a7-49c5-b0bd-2f6fbd6cd102"),
+                            Id = new Guid("c87a191b-dd53-473b-9e62-5557dfc8b133"),
+                            CategoryId = new Guid("e41c22a3-7d8d-4d25-b0b2-3b23a5eebe9b"),
                             IsPredefined = true,
                             Name = "Livestock Handler"
                         },
                         new
                         {
-                            Id = new Guid("1c4e6180-9edb-4683-9afc-a0631dac381d"),
-                            CategoryId = new Guid("e7aa259c-8b80-4a74-a99e-78d42f330a7c"),
+                            Id = new Guid("2a94340d-13c9-4eae-98b1-1edcee38a468"),
+                            CategoryId = new Guid("f6f8f617-1f24-475d-8366-b6476cc00ee9"),
                             IsPredefined = true,
                             Name = "Planter"
                         },
                         new
                         {
-                            Id = new Guid("fab9ea3e-1589-45cb-98c8-9ed5c4148a38"),
-                            CategoryId = new Guid("e7aa259c-8b80-4a74-a99e-78d42f330a7c"),
+                            Id = new Guid("c7330d5e-5471-4b39-a907-9bd3c4bcc23e"),
+                            CategoryId = new Guid("f6f8f617-1f24-475d-8366-b6476cc00ee9"),
                             IsPredefined = true,
                             Name = "Harvester"
                         },
                         new
                         {
-                            Id = new Guid("255c4fb4-76ed-4234-8ff5-9e7116224a40"),
-                            CategoryId = new Guid("e7aa259c-8b80-4a74-a99e-78d42f330a7c"),
+                            Id = new Guid("1fed148c-5cbb-412d-a6db-51423db450b5"),
+                            CategoryId = new Guid("f6f8f617-1f24-475d-8366-b6476cc00ee9"),
                             IsPredefined = true,
                             Name = "Weed Control Specialist"
                         },
                         new
                         {
-                            Id = new Guid("a8a06283-6dd4-400d-8fd4-3800122d4856"),
-                            CategoryId = new Guid("e7aa259c-8b80-4a74-a99e-78d42f330a7c"),
+                            Id = new Guid("48f672f4-43c9-4bc5-ae98-d98b070cf8fa"),
+                            CategoryId = new Guid("f6f8f617-1f24-475d-8366-b6476cc00ee9"),
                             IsPredefined = true,
                             Name = "Pest Control Specialist"
                         },
                         new
                         {
-                            Id = new Guid("093cefca-3ec1-4f52-a39c-62dedbc82a61"),
-                            CategoryId = new Guid("e7aa259c-8b80-4a74-a99e-78d42f330a7c"),
+                            Id = new Guid("ce81221b-95b6-41ec-8a3d-37c43d9aacb2"),
+                            CategoryId = new Guid("f6f8f617-1f24-475d-8366-b6476cc00ee9"),
                             IsPredefined = true,
                             Name = "Scout"
                         },
                         new
                         {
-                            Id = new Guid("911c9119-6570-4070-9a0d-9a5301b9773b"),
-                            CategoryId = new Guid("e7aa259c-8b80-4a74-a99e-78d42f330a7c"),
+                            Id = new Guid("ed65cd35-f17c-4a47-bd55-aeba19a47d86"),
+                            CategoryId = new Guid("f6f8f617-1f24-475d-8366-b6476cc00ee9"),
                             IsPredefined = true,
                             Name = "Crop Specialist / Agronomist Assistant"
                         },
                         new
                         {
-                            Id = new Guid("5d85c8f3-774e-47f7-8b4b-5334f1a3722f"),
-                            CategoryId = new Guid("e7aa259c-8b80-4a74-a99e-78d42f330a7c"),
+                            Id = new Guid("934182f1-6e90-46e0-bb58-2ae0e46c1c0a"),
+                            CategoryId = new Guid("f6f8f617-1f24-475d-8366-b6476cc00ee9"),
                             IsPredefined = true,
                             Name = "Greenhouse Worker"
                         },
                         new
                         {
-                            Id = new Guid("bb96978e-f161-4b91-98d8-eb7098727d77"),
-                            CategoryId = new Guid("04c71678-4205-4a37-817b-92d05dc9fd72"),
+                            Id = new Guid("97d19c0d-cd03-43ca-ab57-63d70a18019c"),
+                            CategoryId = new Guid("f343ab87-eb1b-42fd-b11a-982ac0832fc0"),
                             IsPredefined = true,
                             Name = "Tractor Operator"
                         },
                         new
                         {
-                            Id = new Guid("08312aa3-68b0-42a5-9522-aeebb5b4d85d"),
-                            CategoryId = new Guid("04c71678-4205-4a37-817b-92d05dc9fd72"),
+                            Id = new Guid("35e11364-0de4-4840-b63c-095323e6de59"),
+                            CategoryId = new Guid("f343ab87-eb1b-42fd-b11a-982ac0832fc0"),
                             IsPredefined = true,
                             Name = "Combine Operator"
                         },
                         new
                         {
-                            Id = new Guid("b00c6b53-65cd-43d5-a9a6-83149923a0ee"),
-                            CategoryId = new Guid("04c71678-4205-4a37-817b-92d05dc9fd72"),
+                            Id = new Guid("0f2badb3-d2d1-47f2-a9ca-c77eece69fe8"),
+                            CategoryId = new Guid("f343ab87-eb1b-42fd-b11a-982ac0832fc0"),
                             IsPredefined = true,
                             Name = "Sprayer Operator"
                         },
                         new
                         {
-                            Id = new Guid("3fa29a42-7763-4c0d-b391-458de8e79a33"),
-                            CategoryId = new Guid("fee5d6bf-3a86-4800-a309-d0b0a4af5168"),
+                            Id = new Guid("e82d6839-fbe1-4c32-8653-147caac1989b"),
+                            CategoryId = new Guid("4f957bf9-5829-4cb8-8b6f-e78fae5d1b9c"),
                             IsPredefined = true,
                             Name = "Manager"
                         });

@@ -2,7 +2,7 @@
 
 public class FarmAuthorizationService(IHttpContextAccessor httpContextAccessor) : IFarmAuthorizationService
 {
-    public Guid? GetUserFarmId()
+    public Guid? GetFarmId()
     {
         var claim = httpContextAccessor.HttpContext?.User.FindFirst("farmId");
         if (claim == null)

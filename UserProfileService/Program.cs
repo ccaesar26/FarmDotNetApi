@@ -8,6 +8,9 @@ using Shared.FarmClaimTypes;
 using UserProfileService.Converters;
 using UserProfileService.Data;
 using UserProfileService.Repositories;
+using UserProfileService.Repositories.AttributeCategoryRepository;
+using UserProfileService.Repositories.ProfileAttributeRepository;
+using UserProfileService.Repositories.UserProfileRepository;
 using UserProfileService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +51,7 @@ builder.Services
                 {
                     context.Token = token;
                 }
+
                 return Task.CompletedTask;
             }
         };
@@ -70,6 +74,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IFarmAuthorizationService, FarmAuthorizationService>();
 
 // Add Repositories
+builder.Services.AddScoped<IAttributeCategoryRepository, AttributeCategoryRepository>();
+builder.Services.AddScoped<IProfileAttributeRepository, ProfileAttributeRepository>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 
 // Add Services

@@ -23,10 +23,12 @@
           "Port": 5801
         }
       ],
-      "UpstreamPathTemplate": "/api/identity/{everything}",
+      "UpstreamPathTemplate": "/api/users/{everything}",
       "UpstreamHttpMethod": [
         "GET",
-        "PUT"
+        "POST",
+        "PUT",
+        "DELETE"
       ],
       "HttpHandlerOptions": {
         "UseCookieContainer": true,

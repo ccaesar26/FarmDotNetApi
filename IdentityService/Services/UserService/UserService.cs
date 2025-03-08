@@ -1,9 +1,11 @@
 ﻿using IdentityService.Models;
+using IdentityService.Models.Entities;
 using IdentityService.Repositories;
+using IdentityService.Repositories.RoleRepository;
 
 namespace IdentityService.Services.UserService;
 
-public class UserService(IUserRepository userRepository) : IUserService
+public class UserService(IUserRepository userRepository, IRoleRepository roleRepository) : IUserService
 {
     public async ValueTask<User?> GetUserAsync(Guid userId)
     {
@@ -39,5 +41,27 @@ public class UserService(IUserRepository userRepository) : IUserService
             user.UserProfileId = Guid.Parse(userProfileId);
             await userRepository.UpdateUserAsync(user);
         }
+    }
+
+    public async ValueTask<Guid> CreateUserAsync(string requestUsername, string requestEmail, string requestPassword,
+        string requestRole,
+        string? requestFarmId)
+    {
+        var role = await roleRepository.GetRoleByNameAsync(requestRole);
+        if (role == null)
+        {
+            throw new InvalidOperationException("Role not found!");
+        }
+        
+        var user = new User
+        {
+            Username = requestUsername,
+            Email = requestEmail,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(requestPassword),
+            Role = await roleRepository.GetRoleByNameAsync(requestRole) ?? throw new InvalidOperationException(),
+            FarmId = requestFarmId == null ? null : Guid.Parse(requestFarmId)
+        };
+
+        return await userRepository.CreateUserAsync(user);
     }
 }

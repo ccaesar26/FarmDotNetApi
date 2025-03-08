@@ -16,6 +16,33 @@ public class UsersController(
 ) : Controller
 {
     [Authorize(Policy = "ManagerOnly")]
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequest request)
+    {
+        var farmId = farmAuthorizationService.GetFarmId();
+        if (farmId == null || string.IsNullOrEmpty(farmId.ToString()))
+        {
+            return Unauthorized();
+        }
+        
+        try
+        {
+            var userId = await userService.CreateUserAsync(
+                request.Username,
+                request.Email,
+                request.Password,
+                request.Role,
+                farmId.ToString()
+            );
+            return Ok(new { userId });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+    
+    [Authorize(Policy = "ManagerOnly")]
     [HttpPut("update-farm-id")]
     public async Task<IActionResult> UpdateFarmIdAsync([FromBody] UpdateFarmRequest request)
     {
@@ -57,5 +84,4 @@ public class UsersController(
         
         return Ok(new { role = roleClaim.Value });
     }
-
 }

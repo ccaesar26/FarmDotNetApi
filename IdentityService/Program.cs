@@ -4,7 +4,6 @@ using IdentityService.Repositories;
 using IdentityService.Repositories.RoleRepository;
 using IdentityService.Services.AuthService;
 using IdentityService.Services.EventConsumers;
-using IdentityService.Services.RoleService;
 using IdentityService.Services.TokenService;
 using IdentityService.Services.UserService;
 using MassTransit;
@@ -75,7 +74,6 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 // Add Services
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 

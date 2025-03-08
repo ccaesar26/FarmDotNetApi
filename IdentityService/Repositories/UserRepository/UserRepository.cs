@@ -31,4 +31,11 @@ public class UserRepository(IdentityDbContext context) : IUserRepository
             .Include(u => u.Role)
             .SingleOrDefaultAsync(u => u.Id == id);
     }
+
+    public async ValueTask<Guid> CreateUserAsync(User user)
+    {
+        await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
+        return user.Id;
+    }
 }
