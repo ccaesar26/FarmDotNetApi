@@ -84,4 +84,17 @@ public class UsersController(
         
         return Ok(new { role = roleClaim.Value });
     }
+    
+    [HttpGet("workers")]
+    public async Task<IActionResult> GetWorkersAsync()
+    {
+        var farmId = farmAuthorizationService.GetFarmId();
+        if (farmId == null || string.IsNullOrEmpty(farmId.ToString()))
+        {
+            return Unauthorized();
+        }
+
+        var workers = await userService.GetWorkersAsync(farmId);
+        return Ok(workers.ToArray());
+    }
 }

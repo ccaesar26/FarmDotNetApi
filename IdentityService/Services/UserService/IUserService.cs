@@ -12,4 +12,6 @@ public interface IUserService
 
     ValueTask<Guid> CreateUserAsync(string requestUsername, string requestEmail, string requestPassword,
         string requestRole, string? requestFarmId);
+
+    ValueTask<IEnumerable<User>> GetWorkersAsync(Guid? farmId);
 }

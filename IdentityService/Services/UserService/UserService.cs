@@ -64,4 +64,9 @@ public class UserService(IUserRepository userRepository, IRoleRepository roleRep
 
         return await userRepository.CreateUserAsync(user);
     }
+
+    public async ValueTask<IEnumerable<User>> GetWorkersAsync(Guid? farmId)
+    {
+        return (await userRepository.GetUsersByFarmIdAsync(farmId)).Where(u => u.Role.Name == "Worker");
+    }
 }

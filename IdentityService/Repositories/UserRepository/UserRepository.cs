@@ -38,4 +38,12 @@ public class UserRepository(IdentityDbContext context) : IUserRepository
         await context.SaveChangesAsync();
         return user.Id;
     }
+
+    public async ValueTask<IEnumerable<User>> GetUsersByFarmIdAsync(Guid? farmId)
+    {
+        return await context.Users
+            .Include(u => u.Role)
+            .Where(u => u.FarmId == farmId)
+            .ToListAsync();
+    }
 }
