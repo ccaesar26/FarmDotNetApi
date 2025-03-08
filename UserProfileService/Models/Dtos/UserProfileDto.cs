@@ -1,7 +1,9 @@
 ﻿namespace UserProfileService.Models.Dtos;
 
-public record GetUserProfileResponse(
+public record UserProfileDto(
+    Guid Id,
     string Name,
     DateOnly DateOfBirth,
-    string Gender
+    string Gender,
+    string[] AttributeNames
 );

@@ -64,8 +64,8 @@ public class UserProfileController(
         return Ok(userProfile.ToDto());
     }
 
-    [HttpGet("user/{userId:guid}")]
-    public async Task<IActionResult> GetUserProfileByUserIdAsync(Guid userId)
+    [HttpGet("user"), Authorize(Policy = "ManagerOnly")]
+    public async Task<IActionResult> GetUserProfileByUserIdAsync([FromQuery] Guid userId)
     {
         var userProfile = await userProfileService.GetUserProfileByUserIdAsync(userId);
 
@@ -74,7 +74,7 @@ public class UserProfileController(
             return NotFound();
         }
 
-        return Ok(userProfile);
+        return Ok(userProfile.ToDto());
     }
 
     [HttpPut("{id:guid}"), Authorize(Policy = "ManagerOnly")]
