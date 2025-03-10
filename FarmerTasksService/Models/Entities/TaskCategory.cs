@@ -11,4 +11,6 @@ public class TaskCategory
 
     [Required, MaxLength(100)]
     public required string Name { get; set; } // e.g., "Planting", "Harvesting", "Maintenance"
+
+    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
 }

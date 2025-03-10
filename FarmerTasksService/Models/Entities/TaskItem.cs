@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FarmerTasksService.Models.Enums;
-using TaskStatus = System.Threading.Tasks.TaskStatus;
+using TaskStatus = FarmerTasksService.Models.Enums.TaskStatus;
 
 namespace FarmerTasksService.Models.Entities;
 
@@ -29,4 +29,10 @@ public class TaskItem
     public Guid? CategoryId { get; set; }
     [ForeignKey("CategoryId")]
     public TaskCategory? Category { get; set; }
+    
+    public RecurrenceType Recurrence { get; set; } = RecurrenceType.None;
+    public DateTime? RecurrenceEndDate { get; set; }
+    public DateTime? LastGeneratedDate { get; set; }
+    
+    public ICollection<TaskComment> Comments { get; set; } = new List<TaskComment>();
 }

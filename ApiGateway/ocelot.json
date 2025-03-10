@@ -136,6 +136,23 @@
       ]
     },
     {
+      "DownstreamPathTemplate": "/api/tasks/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5807
+        }
+      ],
+      "UpstreamPathTemplate": "/api/tasks/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
       "DownstreamPathTemplate": "/api/config/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

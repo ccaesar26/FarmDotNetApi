@@ -1,6 +1,95 @@
+using System.Text;
+using FarmerTasksService.Data;
+using FarmerTasksService.Repositories;
+using FarmerTasksService.Services;
+using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Shared.FarmAuthorizationService;
+using Shared.FarmClaimTypes;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Add authentication & authorization
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new Exception("Jwt:Key not found."));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Audience = builder.Configuration["Auth:Audience"];
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+
+        // Validate the token issuer and audience
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = true,
+            ValidateLifetime = true, // Ensures tokens are not expired
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Request.Cookies.TryGetValue("AuthToken", out var token);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+// Add authorization
+builder.Services
+    .AddAuthorizationBuilder()
+    .AddPolicy("ManagerOnly", policy => policy.RequireClaim(FarmClaimTypes.Role, "Manager"))
+    .AddPolicy("ManagerAndWorkers", policy => policy.RequireClaim(FarmClaimTypes.Role, "Manager", "Worker"));
+
+// Add DbContext
+builder.Services.AddDbContext<FarmerTaskDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register IHttpContextAccessor (required for FarmAuthorizationService)
+builder.Services.AddHttpContextAccessor();
+
+// Register FarmAuthorizationService as a Scoped service
+builder.Services.AddScoped<IFarmAuthorizationService, FarmAuthorizationService>();
+
+// Register repositories
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<ITaskCategoryRepository, TaskCategoryRepository>();
+builder.Services.AddScoped<ITaskCommentRepository, TaskCommentRepository>();
+
+// Register services
+builder.Services.AddScoped<ITaskService, TaskService>();
+
+// Register controllers
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+// Add MassTransit
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((_, cfg) =>
+    {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], builder.Configuration["RabbitMq:VirtualHost"],
+            h =>
+            {
+                h.Username(builder.Configuration["RabbitMq:Username"] ?? throw new InvalidOperationException());
+                h.Password(builder.Configuration["RabbitMq:Password"] ?? throw new InvalidOperationException());
+            });
+    });
+});
+
+// Register OpenAPI
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -14,28 +103,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -12,7 +12,7 @@ public class TaskComment
     [Required]
     public required Guid TaskId { get; set; }
     [ForeignKey(nameof(TaskId))]
-    public required TaskItem Task { get; set; }
+    public TaskItem Task { get; set; } = null!;
 
     [Required]
     public required Guid UserId { get; set; } // ID of the user who created the comment
