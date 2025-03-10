@@ -2,13 +2,15 @@ using System.Text;
 using ClimateIndicesService.Data;
 using ClimateIndicesService.ExternalClients.EdoApiClient;
 using ClimateIndicesService.Repositories;
-using ClimateIndicesService.Services;
 using ClimateIndicesService.Services.DroughtAnalysisService;
 using ClimateIndicesService.Services.DroughtRecordService;
+using MaxRev.Gdal.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.FarmClaimTypes;
+
+GdalBase.ConfigureAll();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +72,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<IEdoApiClient, EdoApiClient>();
 
 builder.Services.AddScoped<IDroughtRecordRepository, DroughtRecordRepository>();
+builder.Services.AddScoped<IDroughtRasterRepository, GdalDroughtRasterRepository>();
 
 builder.Services.AddScoped<IDroughtRecordService, DroughtRecordService>();
 builder.Services.AddScoped<IDroughtAnalysisService, DroughtAnalysisService>();

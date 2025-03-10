@@ -1,53 +1,25 @@
-﻿using ClimateIndicesService.Data;
-using ClimateIndicesService.Models;
-using MaxRev.Gdal.Core;
-using OSGeo.GDAL;
-
+﻿using ClimateIndicesService.Models;
+using ClimateIndicesService.Repositories;
 
 namespace ClimateIndicesService.Services.DroughtAnalysisService;
 
-public class DroughtAnalysisService : IDroughtAnalysisService
+public class DroughtAnalysisService(
+    ILogger<DroughtAnalysisService> logger,
+    IDroughtRasterRepository rasterRepository
+) : IDroughtAnalysisService
 {
-    private readonly ILogger<DroughtAnalysisService> _logger;
-    private readonly ClimateIndicesDbContext _dbContext;
-
-    public DroughtAnalysisService(ILogger<DroughtAnalysisService> logger, ClimateIndicesDbContext dbContext)
+    public async ValueTask<DroughtLevelInfo> ComputeDroughtLevelForCoordinates(byte[] raster, double lon, double lat)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         try
         {
-            GdalBase.ConfigureAll();
-            Console.WriteLine($"GDAL Version: {Gdal.VersionInfo("")}"); // Good for verification
+            var droughtValue = await rasterRepository.GetDroughtValueAsync(raster, lon, lat);
+            return CreateDroughtInfo(droughtValue);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"GDAL Initialization Failed: {ex.Message}");
-            // Handle the error appropriately (e.g., log it, display an error message, exit the application).
+            logger.LogError(ex, "Error computing drought level for coordinates: Lon={Lon}, Lat={Lat}", lon, lat);
+            throw; // Re-throw the exception after logging
         }
-    }
-
-    public async ValueTask<DroughtLevelInfo> ComputeDroughtLevelForCoordinates(byte[] raster, double lon, double lat)
-    {
-        var tempFilePath = Path.GetTempFileName() + ".tif";
-        await File.WriteAllBytesAsync(tempFilePath, raster);
-
-        // Open with GDAL
-        using var dataset = Gdal.Open(tempFilePath, Access.GA_ReadOnly);
-        if (dataset == null) throw new Exception("Failed to open GeoTIFF.");
-
-        // Convert lon/lat to pixel coordinates
-        var geoTransform = new double[6];
-        dataset.GetGeoTransform(geoTransform);
-        var (x, y) = ConvertGeoToPixel(lon, lat, geoTransform);
-
-        // Read the pixel value
-        var band = dataset.GetRasterBand(1);
-        var buffer = new int[1];
-        band.ReadRaster(x, y, 1, 1, buffer, 1, 1, 0, 0);
-        var droughtValue = buffer[0];
-
-        return CreateDroughtInfo(droughtValue);
     }
 
     private static readonly Dictionary<int, string> DroughtLevelMeanings = new()
@@ -100,12 +72,5 @@ public class DroughtAnalysisService : IDroughtAnalysisService
             DroughtLevelMeanings.GetValueOrDefault(droughtValue, "Unknown"),
             FarmerFriendlyDescriptions.GetValueOrDefault(droughtValue, "Unknown")
         );
-    }
-
-    private static (int, int) ConvertGeoToPixel(double lon, double lat, double[] geoTransform)
-    {
-        var x = (int)((lon - geoTransform[0]) / geoTransform[1]);
-        var y = (int)((lat - geoTransform[3]) / geoTransform[5]);
-        return (x, y);
     }
 }
