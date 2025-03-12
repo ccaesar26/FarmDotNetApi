@@ -21,7 +21,7 @@ public class TaskService(
             Description = dto.Description,
             DueDate = dto.DueDate,
             Priority = dto.Priority,
-            Status = TaskStatus.ToDo,
+            Status = dto.Status,
             AssignedUserId = dto.AssignedUserId,
             CategoryId = dto.CategoryId,
             Recurrence = dto.Recurrence,

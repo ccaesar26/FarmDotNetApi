@@ -1,4 +1,5 @@
 ﻿using FarmerTasksService.Models.Enums;
+using TaskStatus = FarmerTasksService.Models.Enums.TaskStatus;
 
 namespace FarmerTasksService.Models.Dtos;
 
@@ -10,5 +11,6 @@ public record CreateTaskDto(
     Guid? AssignedUserId,
     Guid? CategoryId,
     RecurrenceType Recurrence, 
-    DateTime? RecurrenceEndDate
+    DateTime? RecurrenceEndDate,
+    TaskStatus Status = TaskStatus.ToDo
 );
