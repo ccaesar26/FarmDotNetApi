@@ -1,6 +1,7 @@
 ﻿using FarmerTasksService.Data;
 using FarmerTasksService.Models.Dtos;
 using FarmerTasksService.Models.Entities;
+using FarmerTasksService.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace FarmerTasksService.Repositories;
@@ -18,10 +19,12 @@ public class TaskRepository(FarmerTaskDbContext context) : ITaskRepository
     {
         return await context.Tasks
             .Include(t => t.Category)
+            .Include(ta => ta.TaskAssignments)
             .FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public async ValueTask<List<TaskItem>> GetAllAsync(TaskFilterDto? filter = null)
+    public async ValueTask<List<TaskItem>> GetAllAsync(Guid farmId, TaskFilterDto? filter = null, int pageNumber = 1,
+        int pageSize = int.MaxValue)
     {
         var tasks = context.Tasks
             .Include(t => t.Category);
@@ -45,11 +48,6 @@ public class TaskRepository(FarmerTaskDbContext context) : ITaskRepository
             query = query.Where(t => t.CategoryId == filter.CategoryId);
         }
 
-        if (filter.AssignedUserId.HasValue)
-        {
-            query = query.Where(t => t.AssignedUserId == filter.AssignedUserId);
-        }
-
         if (filter.DueDateStart.HasValue)
         {
             query = query.Where(t => t.DueDate >= filter.DueDateStart);
@@ -60,7 +58,12 @@ public class TaskRepository(FarmerTaskDbContext context) : ITaskRepository
             query = query.Where(t => t.DueDate <= filter.DueDateEnd);
         }
 
-        return await query.ToListAsync();
+        return await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Include(t => t.Category)
+            .Include(ta => ta.TaskAssignments)
+            .ToListAsync();
     }
 
     public async ValueTask UpdateAsync(TaskItem task)
@@ -78,9 +81,56 @@ public class TaskRepository(FarmerTaskDbContext context) : ITaskRepository
         await context.SaveChangesAsync();
     }
 
-    public async ValueTask<IEnumerable<TaskItem>> GetByUserIdAsync(Guid userId) =>
+    public async ValueTask<IEnumerable<TaskItem>> GetByAssignedUserAsync(Guid userId, int pageNumber, int pageSize) =>
+        await context.TaskAssignments
+            .Where(ta => ta.UserId == userId)
+            .Include(ta => ta.Task).ThenInclude(t => t.Category)
+            .Select(ta => ta.Task)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+    public async ValueTask AssignUsersToTaskAsync(Guid taskId, List<Guid> userIds)
+    {
+        var task = await GetByIdAsync(taskId);
+
+        if (task == null)
+        {
+            throw new KeyNotFoundException($"Task with id {taskId} not found");
+        }
+
+        var taskAssignments = userIds.Select(userId => new TaskAssignment
+        {
+            TaskId = taskId,
+            UserId = userId
+        });
+
+        await context.TaskAssignments.AddRangeAsync(taskAssignments);
+        await context.SaveChangesAsync();
+    }
+
+    public async ValueTask UnassignUsersFromTaskAsync(Guid taskId, List<Guid> userIds)
+    {
+        var task = await GetByIdAsync(taskId);
+
+        if (task == null)
+        {
+            throw new KeyNotFoundException($"Task with id {taskId} not found");
+        }
+
+        var taskAssignments = await context.TaskAssignments
+            .Where(ta => ta.TaskId == taskId && userIds.Contains(ta.UserId))
+            .ToListAsync();
+
+        context.TaskAssignments.RemoveRange(taskAssignments);
+        await context.SaveChangesAsync();
+    }
+
+    public async ValueTask<IEnumerable<TaskItem>> GetAllNotGeneratedRecurringAsync() =>
         await context.Tasks
-            .Include(t => t.Category)
-            .Where(t => t.AssignedUserId == userId)
+            .Where(t => t.Recurrence != RecurrenceType.None &&
+                        (t.LastGeneratedDate == null || t.LastGeneratedDate < DateTime.UtcNow))
+            // .Where(t => t.Recurrence != RecurrenceType.None && t.RecurrenceEndDate.HasValue &&
+            //             t.RecurrenceEndDate > DateTime.UtcNow)
             .ToListAsync();
 }

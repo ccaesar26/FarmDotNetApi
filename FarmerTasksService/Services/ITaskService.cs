@@ -6,16 +6,17 @@ namespace FarmerTasksService.Services;
 
 public interface ITaskService
 {
-    ValueTask<Guid> CreateTaskAsync(CreateTaskDto dto);
+    ValueTask<Guid> CreateTaskAsync(CreateTaskDto dto, Guid farmId);
     ValueTask<TaskDto?> GetTaskByIdAsync(Guid id);
-    ValueTask<List<TaskDto>> GetTasksAsync(TaskFilterDto filter);
+    ValueTask<List<TaskDto>> GetTasksAsync(TaskFilterDto filter, int pageNumber, int pageSize, Guid farmId);
     ValueTask UpdateTaskAsync(Guid id, UpdateTaskDto dto);
     ValueTask DeleteTaskAsync(Guid id);
-    ValueTask AssignTaskAsync(Guid taskId, Guid userId);
-    ValueTask UnassignTaskAsync(Guid taskId);
+    ValueTask AssignUsersToTaskAsync(Guid taskId, List<Guid> userIds);
+    ValueTask UnassignUsersFromTaskAsync(Guid taskId, List<Guid> userIds);
     ValueTask UpdateTaskStatusAsync(Guid taskId, TaskStatus status);
-    ValueTask<List<TaskDto>> GetMyTasksAsync(Guid userId);
-    ValueTask<List<TaskCategory>> GetTaskCategoriesAsync(); //if categories
+    ValueTask<List<TaskDto>> GetMyTasksAsync(Guid userId, int pageNumber, int pageSize);
+    ValueTask<List<TaskCategory>> GetTaskCategoriesAsync();
+    ValueTask GenerateRecurringTasksAsync();
     ValueTask<Guid> AddCommentAsync(CreateTaskCommentDto dto);
     ValueTask<List<TaskCommentDto>> GetCommentsByTaskIdAsync(Guid taskId);
 }

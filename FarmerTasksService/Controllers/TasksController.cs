@@ -31,7 +31,7 @@ public class TasksController(
 
         try
         {
-            var taskId = await taskService.CreateTaskAsync(dto);
+            var taskId = await taskService.CreateTaskAsync(dto, TODO);
             await publishEndpoint.Publish(new TaskCreatedEvent(taskId));
             return Ok(taskId);
         }
@@ -71,7 +71,7 @@ public class TasksController(
             return Unauthorized();
         }
 
-        var tasks = await taskService.GetTasksAsync(filter);
+        var tasks = await taskService.GetTasksAsync(filter, TODO, TODO, TODO);
         return Ok(tasks);
     }
     
@@ -133,7 +133,7 @@ public class TasksController(
 
         try
         {
-            await taskService.AssignTaskAsync(taskId, userId);
+            await taskService.AssignUsersToTaskAsync(taskId, userId);
             await publishEndpoint.Publish(new TaskAssignedEvent(taskId, userId));
             return NoContent();
         }
@@ -160,7 +160,7 @@ public class TasksController(
 
         try
         {
-            await taskService.UnassignTaskAsync(taskId);
+            await taskService.UnassignUsersFromTaskAsync(taskId, TODO);
             await publishEndpoint.Publish(new TaskUnassignedEvent(taskId));
             return NoContent();
         }
@@ -218,7 +218,7 @@ public class TasksController(
             return Unauthorized();
         }
 
-        var tasks = await taskService.GetMyTasksAsync(userId.Value);
+        var tasks = await taskService.GetMyTasksAsync(userId.Value, TODO, TODO);
         return Ok(tasks);
     }
     

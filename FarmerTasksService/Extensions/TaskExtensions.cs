@@ -12,10 +12,11 @@ public static class TaskExtensions
         task.DueDate,
         task.Priority,
         task.Status,
-        task.AssignedUserId,
+        task.TaskAssignments.Select(x => x.UserId).ToList(),
         task.CategoryId,
         task.Category?.Name,
         task.Recurrence,
-        task.RecurrenceEndDate
+        task.RecurrenceEndDate,
+        task.FieldId
     );
 }

@@ -8,9 +8,9 @@ public record CreateTaskDto(
     string? Description,
     DateTime DueDate,
     TaskPriority Priority,
-    Guid? AssignedUserId,
     Guid? CategoryId,
     RecurrenceType Recurrence, 
     DateTime? RecurrenceEndDate,
+    Guid FieldId,
     TaskStatus Status = TaskStatus.ToDo
 );

@@ -7,10 +7,10 @@ public class TaskCategory
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
     [Required, MaxLength(100)]
-    public required string Name { get; set; } // e.g., "Planting", "Harvesting", "Maintenance"
+    public required string Name { get; init; } // e.g., "Planting", "Harvesting", "Maintenance"
 
-    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+    public ICollection<TaskItem> Tasks { get; init; } = new List<TaskItem>();
 }

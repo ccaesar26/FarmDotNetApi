@@ -14,6 +14,7 @@ public class TaskItem
     [Required, MaxLength(200)]
     public required string Title { get; set; }
 
+    [MaxLength(1000)]
     public string? Description { get; set; }
 
     public DateTime? DueDate { get; set; }
@@ -24,7 +25,7 @@ public class TaskItem
     [Required]
     public required TaskStatus Status { get; set; }
 
-    public Guid? AssignedUserId { get; set; }
+    // public Guid? AssignedUserId { get; set; }
 
     public Guid? CategoryId { get; set; }
     [ForeignKey("CategoryId")]
@@ -35,4 +36,14 @@ public class TaskItem
     public DateTime? LastGeneratedDate { get; set; }
     
     public ICollection<TaskComment> Comments { get; set; } = new List<TaskComment>();
+    
+    public ICollection<TaskAssignment> TaskAssignments { get; set; } = new List<TaskAssignment>();
+    
+    // Field Relationship (One-to-Many for now)
+    [Required] // Assuming a task MUST be linked to a Field
+    public Guid FieldId { get; set; } // Foreign key to Field (in another service)
+
+    // Farm/Owner ID (add this)
+    [Required]
+    public Guid FarmId { get; set; }  // Assuming you'll use FarmId (more common)
 }

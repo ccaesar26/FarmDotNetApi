@@ -9,8 +9,8 @@ public record UpdateTaskDto(
     DateTime DueDate,
     TaskPriority Priority,
     TaskStatus Status,
-    Guid? AssignedUserId,
     Guid? CategoryId,
     RecurrenceType Recurrence,
-    DateTime? RecurrenceEndDate
+    DateTime? RecurrenceEndDate,
+    Guid FieldId
 );

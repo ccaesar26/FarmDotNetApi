@@ -7,7 +7,6 @@ public record TaskFilterDto(
     TaskStatus? Status,
     TaskPriority? Priority,
     Guid? CategoryId,
-    Guid? AssignedUserId,
     DateTime? DueDateStart,
     DateTime? DueDateEnd
 );

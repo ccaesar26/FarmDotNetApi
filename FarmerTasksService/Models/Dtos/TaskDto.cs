@@ -10,9 +10,10 @@ public record TaskDto(
     DateTime? DueDate,
     TaskPriority Priority,
     TaskStatus Status,
-    Guid? AssignedUserId,
+    List<Guid> AssignedUserIds,
     Guid? CategoryId,
     string? CategoryName,
     RecurrenceType Recurrence,
-    DateTime? RecurrenceEndDate
+    DateTime? RecurrenceEndDate,
+    Guid FieldId
 );

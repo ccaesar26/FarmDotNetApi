@@ -8,6 +8,7 @@ public class FarmerTaskDbContext(DbContextOptions<FarmerTaskDbContext> options) 
     public DbSet<TaskItem> Tasks { get; set; }
     public DbSet<TaskCategory> TaskCategories { get; set; } // If using categories
     public DbSet<TaskComment> TaskComments {get; set;}
+    public DbSet<TaskAssignment> TaskAssignments {get; set;}
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -18,12 +19,22 @@ public class FarmerTaskDbContext(DbContextOptions<FarmerTaskDbContext> options) 
             .WithMany(c => c.Tasks)
             .HasForeignKey(t => t.CategoryId)
             .OnDelete(DeleteBehavior.SetNull); // Or another appropriate action
+        
+        modelBuilder.Entity<TaskAssignment>()
+            .HasKey(ta => new { ta.TaskId, ta.UserId });
+
+        modelBuilder.Entity<TaskAssignment>()
+            .HasOne(ta => ta.Task)
+            .WithMany(t => t.TaskAssignments)
+            .HasForeignKey(ta => ta.TaskId);
 
         modelBuilder.Entity<TaskComment>()
             .HasOne(c => c.Task)
             .WithMany(t => t.Comments)
             .HasForeignKey(c => c.TaskId)
             .OnDelete(DeleteBehavior.Cascade); // Delete comments when a task is deleted.
+        
+        // Seed Task Categories
         
         var plantingCategoryId = Guid.Parse("ba84a42e-b766-4778-bbae-94429ffcd66c");
         var harvestingCategoryId = Guid.Parse("e41ec2cb-6567-434c-b079-7d5d13e8d194");
