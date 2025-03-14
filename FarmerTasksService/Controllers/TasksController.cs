@@ -1,4 +1,5 @@
-﻿using FarmerTasksService.Models.Dtos;
+﻿using FarmerTasksService.Extensions;
+using FarmerTasksService.Models.Dtos;
 using FarmerTasksService.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
@@ -17,21 +18,21 @@ public class TasksController(
     IFarmAuthorizationService farmAuthorizationService,
     IPublishEndpoint publishEndpoint,
     ILogger<TasksController> logger
-    ) : ControllerBase
+) : ControllerBase
 {
     [HttpPost]
     [Authorize(Policy = "ManagerAndWorkers")]
     public async ValueTask<IActionResult> CreateTask([FromBody] CreateTaskDto dto)
     {
         var farmId = farmAuthorizationService.GetFarmId();
-        if (farmId == null)
+        if (farmId.HasValue == false)
         {
             return Unauthorized();
         }
 
         try
         {
-            var taskId = await taskService.CreateTaskAsync(dto, TODO);
+            var taskId = await taskService.CreateTaskAsync(dto, farmId.Value);
             await publishEndpoint.Publish(new TaskCreatedEvent(taskId));
             return Ok(taskId);
         }
@@ -41,7 +42,7 @@ public class TasksController(
             return StatusCode(500, "An error occurred while creating the task.");
         }
     }
-    
+
     [HttpGet("{id}")]
     [Authorize(Policy = "ManagerAndWorkers")]
     public async ValueTask<IActionResult> GetTaskById(Guid id)
@@ -60,10 +61,14 @@ public class TasksController(
 
         return Ok(task);
     }
-    
+
     [HttpGet]
     [Authorize(Policy = "ManagerAndWorkers")]
-    public async ValueTask<IActionResult> GetTasks([FromQuery] TaskFilterDto filter)
+    public async ValueTask<IActionResult> GetTasks(
+        [FromQuery] TaskFilterDto filter,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = int.MaxValue
+    )
     {
         var farmId = farmAuthorizationService.GetFarmId();
         if (farmId == null)
@@ -71,10 +76,10 @@ public class TasksController(
             return Unauthorized();
         }
 
-        var tasks = await taskService.GetTasksAsync(filter, TODO, TODO, TODO);
+        var tasks = await taskService.GetTasksAsync(filter, pageNumber, pageSize, farmId.Value);
         return Ok(tasks);
     }
-    
+
     [HttpPut("{id}")]
     [Authorize(Policy = "ManagerAndWorkers")]
     public async ValueTask<IActionResult> UpdateTask(Guid id, [FromBody] UpdateTaskDto dto)
@@ -97,7 +102,7 @@ public class TasksController(
             return StatusCode(500, "An error occurred while updating the task.");
         }
     }
-    
+
     [HttpDelete("{id}")]
     [Authorize(Policy = "ManagerAndWorkers")]
     public async ValueTask<IActionResult> DeleteTask(Guid id)
@@ -120,10 +125,10 @@ public class TasksController(
             return StatusCode(500, "An error occurred while deleting the task.");
         }
     }
-    
-    [HttpPost("{taskId}/assign/{userId}")]
+
+    [HttpPost("{taskId}/assign")]
     [Authorize(Policy = "ManagerAndWorkers")]
-    public async ValueTask<IActionResult> AssignTask(Guid taskId, Guid userId)
+    public async ValueTask<IActionResult> AssignUsersToTaskRequest(Guid taskId, AssignUsersToTaskRequest request)
     {
         var farmId = farmAuthorizationService.GetFarmId();
         if (farmId == null)
@@ -133,8 +138,19 @@ public class TasksController(
 
         try
         {
-            await taskService.AssignUsersToTaskAsync(taskId, userId);
-            await publishEndpoint.Publish(new TaskAssignedEvent(taskId, userId));
+            await taskService.AssignUsersToTaskAsync(taskId, request.UserIds);
+            request.UserIds.ForEach(async void (userId) =>
+            {
+                try
+                {
+                    await publishEndpoint.Publish(new TaskAssignedEvent(taskId, userId));
+                }
+                catch (Exception _)
+                {
+                    // ignored
+                }
+            });
+            
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -147,10 +163,10 @@ public class TasksController(
             return StatusCode(500, "An error occurred while assigning the task.");
         }
     }
-    
+
     [HttpPost("{taskId}/unassign")]
     [Authorize(Policy = "ManagerAndWorkers")]
-    public async ValueTask<IActionResult> UnassignTask(Guid taskId)
+    public async ValueTask<IActionResult> UnassignTask(Guid taskId, UnassignUsersFromTaskRequest request)
     {
         var farmId = farmAuthorizationService.GetFarmId();
         if (farmId == null)
@@ -160,8 +176,18 @@ public class TasksController(
 
         try
         {
-            await taskService.UnassignUsersFromTaskAsync(taskId, TODO);
-            await publishEndpoint.Publish(new TaskUnassignedEvent(taskId));
+            await taskService.UnassignUsersFromTaskAsync(taskId, request.UserIds);
+            request.UserIds.ForEach(async void (userId) =>
+            {
+                try
+                {
+                    await publishEndpoint.Publish(new TaskUnassignedEvent(taskId, userId));
+                }
+                catch (Exception _)
+                {
+                    // ignored
+                }
+            });
             return NoContent();
         }
         catch (KeyNotFoundException)
@@ -174,7 +200,7 @@ public class TasksController(
             return StatusCode(500, "An error occurred while unassigning the task.");
         }
     }
-    
+
     [HttpPut("{taskId}/status")]
     [Authorize(Policy = "ManagerAndWorkers")]
     public async ValueTask<IActionResult> UpdateTaskStatus(Guid taskId, [FromBody] TaskStatus status)
@@ -201,10 +227,10 @@ public class TasksController(
             return StatusCode(500, "An error occurred while updating the task status.");
         }
     }
-    
+
     [HttpGet("my")]
     [Authorize(Policy = "ManagerAndWorkers")]
-    public async ValueTask<IActionResult> GetMyTasks()
+    public async ValueTask<IActionResult> GetMyTasks([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = int.MaxValue)
     {
         var farmId = farmAuthorizationService.GetFarmId();
         if (farmId == null)
@@ -218,10 +244,10 @@ public class TasksController(
             return Unauthorized();
         }
 
-        var tasks = await taskService.GetMyTasksAsync(userId.Value, TODO, TODO);
+        var tasks = await taskService.GetMyTasksAsync(userId.Value, pageNumber, pageSize);
         return Ok(tasks);
     }
-    
+
     [HttpGet("categories")]
     [Authorize(Policy = "ManagerAndWorkers")]
     public async ValueTask<IActionResult> GetTaskCategories()
@@ -233,9 +259,9 @@ public class TasksController(
         }
 
         var categories = await taskService.GetTaskCategoriesAsync();
-        return Ok(categories);
+        return Ok(categories.Select(c => c.ToDto()));
     }
-    
+
     [HttpPost("{taskId}/comments")]
     [Authorize(Policy = "ManagerAndWorkers")]
     public async ValueTask<IActionResult> AddComment(Guid taskId, [FromBody] CreateTaskCommentDto dto)
@@ -262,7 +288,7 @@ public class TasksController(
             return StatusCode(500, "An error occurred while adding the comment.");
         }
     }
-    
+
     [HttpGet("{taskId}/comments")]
     [Authorize(Policy = "ManagerAndWorkers")]
     public async ValueTask<IActionResult> GetComments(Guid taskId)

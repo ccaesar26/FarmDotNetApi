@@ -19,4 +19,9 @@ public static class TaskExtensions
         task.RecurrenceEndDate,
         task.FieldId
     );
+    
+    public static TaskCategoryDto ToDto(this TaskCategory category) => new TaskCategoryDto(
+        category.Id,
+        category.Name
+    );
 }

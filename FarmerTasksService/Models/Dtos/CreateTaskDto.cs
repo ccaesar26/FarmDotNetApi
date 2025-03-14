@@ -6,10 +6,10 @@ namespace FarmerTasksService.Models.Dtos;
 public record CreateTaskDto(
     string Title,
     string? Description,
-    DateTime DueDate,
+    DateTime? DueDate,
     TaskPriority Priority,
     Guid? CategoryId,
-    RecurrenceType Recurrence, 
+    RecurrenceType Recurrence,
     DateTime? RecurrenceEndDate,
     Guid FieldId,
     TaskStatus Status = TaskStatus.ToDo
