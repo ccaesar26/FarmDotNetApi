@@ -101,6 +101,7 @@ public class TaskRepository(FarmerTaskDbContext context) : ITaskRepository
 
         var taskAssignments = userIds.Select(userId => new TaskAssignment
         {
+            Id = Guid.NewGuid(),
             TaskId = taskId,
             UserId = userId
         });
