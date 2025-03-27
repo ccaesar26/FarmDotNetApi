@@ -1,5 +1,8 @@
 using System.Text;
+using CropCatalogService.Converters;
 using CropCatalogService.Data;
+using CropCatalogService.Repository;
+using CropCatalogService.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -64,8 +67,16 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IFarmAuthorizationService, FarmAuthorizationService>();
 
 // Register repositories
+builder.Services.AddScoped<ICropCatalogRepository, CropCatalogRepository>();
 
 // Register Services
+builder.Services.AddScoped<ICropCatalogService, CropCatalogService.Service.CropCatalogService>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter()); // Register DateOnlyConverter
+    });
 
 var app = builder.Build();
 
