@@ -29,11 +29,7 @@
         "POST",
         "PUT",
         "DELETE"
-      ],
-      "HttpHandlerOptions": {
-        "UseCookieContainer": true,
-        "AllowAutoRedirect": false
-      }
+      ]
     },
     {
       "DownstreamPathTemplate": "/api/fields/{everything}",
@@ -145,6 +141,23 @@
         }
       ],
       "UpstreamPathTemplate": "/api/tasks/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/cropcatalog/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5808
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cropcatalog/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",

@@ -1,0 +1,6 @@
+@CropCatalogService_HostAddress = http://localhost:5260
+
+GET {{CropCatalogService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
