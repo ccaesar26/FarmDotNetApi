@@ -1,12 +1,12 @@
-﻿using IdentityService.Services.UserService;
+﻿using IdentityService.Extensions;
+using IdentityService.Services.UserService;
 using MassTransit;
 using Shared.Models.Events;
 
 namespace IdentityService.Services.EventConsumers;
 
 public class UserProfileCreatedEventConsumer(
-    IUserService userService,
-    IPublishEndpoint publishEndpoint
+    IUserService userService
 ) : IConsumer<UserProfileCreatedEvent>
 {
     public async Task Consume(ConsumeContext<UserProfileCreatedEvent> context)
@@ -18,7 +18,7 @@ public class UserProfileCreatedEventConsumer(
         if (user is not null)
         {
             user.UserProfileId = userProfileId;
-            await userService.UpdateUserAsync(user);
+            await userService.UpdateUserAsync(user.ToUpdateUserRequest());
         }
     }
 }

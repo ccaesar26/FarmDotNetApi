@@ -34,8 +34,19 @@ public class UserProfileRepository(UserProfileDbContext context) : IUserProfileR
 
     public async ValueTask UpdateAsync(UserProfile userProfile)
     {
-        context.UserProfiles.Update(userProfile);
+        var existingUserProfile = await context.UserProfiles.FindAsync(userProfile.Id);
+        if (existingUserProfile is null)
+        {
+            return;
+        }
+        
+        existingUserProfile.Name = userProfile.Name;
+        existingUserProfile.DateOfBirth = userProfile.DateOfBirth;
+        existingUserProfile.Gender = userProfile.Gender;
+        
         await context.SaveChangesAsync();
+
+        await context.Entry(existingUserProfile).ReloadAsync();
     }
 
     public async ValueTask DeleteAsync(Guid id)

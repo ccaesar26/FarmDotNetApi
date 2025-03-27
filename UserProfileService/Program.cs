@@ -7,11 +7,11 @@ using Shared.FarmAuthorizationService;
 using Shared.FarmClaimTypes;
 using UserProfileService.Converters;
 using UserProfileService.Data;
-using UserProfileService.Repositories;
 using UserProfileService.Repositories.AttributeCategoryRepository;
 using UserProfileService.Repositories.ProfileAttributeRepository;
 using UserProfileService.Repositories.UserProfileRepository;
-using UserProfileService.Services;
+using UserProfileService.Services.EventConsumers;
+using UserProfileService.Services.UserProfileService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,7 +79,7 @@ builder.Services.AddScoped<IProfileAttributeRepository, ProfileAttributeReposito
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 
 // Add Services
-builder.Services.AddScoped<IUserProfileService, UserProfileService.Services.UserProfileService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService.Services.UserProfileService.UserProfileService>();
 
 // Add controllers
 builder.Services
@@ -90,6 +90,8 @@ builder.Services.AddEndpointsApiExplorer();
 // Add MassTransit
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<UserDeletedEventConsumer>();
+    
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host(builder.Configuration["RabbitMq:Host"], builder.Configuration["RabbitMq:VirtualHost"],
@@ -98,6 +100,8 @@ builder.Services.AddMassTransit(x =>
                 h.Username(builder.Configuration["RabbitMq:Username"] ?? throw new InvalidOperationException());
                 h.Password(builder.Configuration["RabbitMq:Password"] ?? throw new InvalidOperationException());
             });
+
+        cfg.ConfigureEndpoints(context);
     });
 });
 

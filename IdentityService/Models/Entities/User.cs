@@ -12,18 +12,18 @@ public class User
     
     [Required]
     [MaxLength(120)]
-    public required string Username { get; init; }
+    public required string Username { get; set; }
 
     [Required]
     [MaxLength(120)]
     [EmailAddress]
-    public required string Email { get; init; }
+    public required string Email { get; set; }
     
     [Required]
     [MaxLength(120)]
     public required string PasswordHash { get; init; }
     
-    public required Role Role { get; init; }
+    public required Role Role { get; set; }
     
     public Guid? FarmId { get; set; }
     

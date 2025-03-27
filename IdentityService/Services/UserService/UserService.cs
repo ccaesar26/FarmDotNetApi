@@ -1,7 +1,9 @@
 ﻿using IdentityService.Models;
+using IdentityService.Models.Dtos;
 using IdentityService.Models.Entities;
 using IdentityService.Repositories;
 using IdentityService.Repositories.RoleRepository;
+using IdentityService.Repositories.UserRepository;
 
 namespace IdentityService.Services.UserService;
 
@@ -12,9 +14,19 @@ public class UserService(IUserRepository userRepository, IRoleRepository roleRep
         return await userRepository.GetUserByIdAsync(userId);
     }
 
-    public async ValueTask UpdateUserAsync(User user)
+    public async ValueTask<User> UpdateUserAsync(UpdateUserRequest user)
     {
-        await userRepository.UpdateUserAsync(user);
+        var role = await roleRepository.GetRoleByNameAsync(user.RoleName);
+        var passwordHash = (await userRepository.GetUserByIdAsync(Guid.Parse(user.Id)))?.PasswordHash;
+        var updatedUser = await userRepository.UpdateUserAsync(new User
+        {
+            Id = Guid.Parse(user.Id),
+            Username = user.Username,
+            Email = user.Email,
+            PasswordHash = passwordHash ?? throw new InvalidOperationException("User not found!"),
+            Role = role ?? throw new InvalidOperationException("Role not found!")
+        });
+        return updatedUser;
     }
 
     public async ValueTask<string> GetRoleAsync(string email)
@@ -68,5 +80,10 @@ public class UserService(IUserRepository userRepository, IRoleRepository roleRep
     public async ValueTask<IEnumerable<User>> GetWorkersAsync(Guid? farmId)
     {
         return (await userRepository.GetUsersByFarmIdAsync(farmId)).Where(u => u.Role.Name == "Worker");
+    }
+
+    public async ValueTask DeleteUserAsync(Guid userId)
+    { 
+        await userRepository.DeleteUserAsync(userId);
     }
 }

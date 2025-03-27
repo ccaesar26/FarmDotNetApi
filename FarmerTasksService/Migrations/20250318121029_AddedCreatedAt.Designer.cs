@@ -3,6 +3,7 @@ using System;
 using FarmerTasksService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FarmerTasksService.Migrations
 {
     [DbContext(typeof(FarmerTaskDbContext))]
-    partial class FarmerTaskDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318121029_AddedCreatedAt")]
+    partial class AddedCreatedAt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,11 +85,6 @@ namespace FarmerTasksService.Migrations
                         {
                             Id = new Guid("b01abce0-1604-483b-8c7d-ffc8de5c459e"),
                             Name = "Pest and Disease Control"
-                        },
-                        new
-                        {
-                            Id = new Guid("d64372d4-a7de-4b3b-a3c1-ba5edec17bc1"),
-                            Name = "Fertilization"
                         });
                 });
 

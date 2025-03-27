@@ -13,7 +13,7 @@ public class UserProfile
     
     [Required]
     [MaxLength(120)]
-    public required string Name { get; init; }
+    public required string Name { get; set; }
     
     [Required]
     [DataType(DataType.Date)]

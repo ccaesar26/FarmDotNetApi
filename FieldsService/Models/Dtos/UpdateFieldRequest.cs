@@ -2,4 +2,8 @@
 
 namespace FieldsService.Models.Dtos;
 
-public record UpdateFieldRequest(Guid FarmId, string FieldName, Polygon FieldBoundary);
+public record UpdateFieldRequest(
+    string FieldId,
+    string FieldName,
+    Polygon FieldBoundary
+);

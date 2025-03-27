@@ -1,6 +1,7 @@
 ﻿using IdentityService.Models;
 using IdentityService.Repositories;
 using IdentityService.Repositories.RoleRepository;
+using IdentityService.Repositories.UserRepository;
 using IdentityService.Services.TokenService;
 
 namespace IdentityService.Services.AuthService;

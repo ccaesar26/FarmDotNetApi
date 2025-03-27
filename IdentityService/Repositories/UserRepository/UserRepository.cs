@@ -2,7 +2,7 @@
 using IdentityService.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityService.Repositories;
+namespace IdentityService.Repositories.UserRepository;
 
 public class UserRepository(IdentityDbContext context) : IUserRepository
 {
@@ -13,16 +13,30 @@ public class UserRepository(IdentityDbContext context) : IUserRepository
             .SingleOrDefaultAsync(u => u.Email == email);
     }
     
-    public async Task AddUserAsync(User? user)
+    public async ValueTask<Guid> AddUserAsync(User user)
     {
-        await context.Users.AddAsync(user);
+        var addedUser = (await context.Users.AddAsync(user)).Entity;
         await context.SaveChangesAsync();
+        return addedUser.Id;
     }
 
-    public async Task UpdateUserAsync(User? user)
+    public async ValueTask<User> UpdateUserAsync(User user)
     {
-        context.Users.Update(user);
+        var returnedUser = await context.Users.FindAsync(user.Id);
+        if (returnedUser == null)
+        {
+            throw new InvalidOperationException("User not found!");
+        }
+        
+        returnedUser.Username = user.Username;
+        returnedUser.Email = user.Email;
+        returnedUser.Role = user.Role;
+        
         await context.SaveChangesAsync();
+        
+        await context.Entry(returnedUser).ReloadAsync();
+        
+        return returnedUser;
     }
 
     public async Task<User?> GetUserByIdAsync(Guid id)
@@ -45,5 +59,17 @@ public class UserRepository(IdentityDbContext context) : IUserRepository
             .Include(u => u.Role)
             .Where(u => u.FarmId == farmId)
             .ToListAsync();
+    }
+
+    public async ValueTask DeleteUserAsync(Guid userId)
+    {
+        var user = await context.Users.FindAsync(userId);
+        if (user == null)
+        {
+            throw new InvalidOperationException("User not found!");
+        }
+        
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
     }
 }

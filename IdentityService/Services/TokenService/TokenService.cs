@@ -33,30 +33,6 @@ public class TokenService(IConfiguration configuration) : ITokenService
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-    public string GenerateJwtToken(FarmClaimTypes.FarmClaimDto user)
-    {
-        var jwtSettings = configuration.GetSection("Jwt");
-        var key = Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? throw new InvalidOperationException());
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity([
-                new Claim(FarmClaimTypes.UserId, user.UserId),
-                new Claim(FarmClaimTypes.Email, user.Email),
-                new Claim(FarmClaimTypes.Role, user.Role),
-                new Claim(FarmClaimTypes.FarmId, user.FarmId),
-                new Claim(FarmClaimTypes.UserProfileId, user.UserProfileId)
-            ]),
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["AccessTokenExpiryMinutes"] ?? "60")),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            Issuer = jwtSettings["Issuer"],
-            Audience = jwtSettings["Audience"]
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
-    }
 
     public FarmClaimTypes.FarmClaimDto? ValidateJwt(string jwt)
     {

@@ -7,7 +7,7 @@ public class UserProfileDbContext(DbContextOptions<UserProfileDbContext> options
 {
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<ProfileAttribute> ProfileAttributes { get; set; }
-    public DbSet<AttributeCategory?> AttributeCategories { get; set; }
+    public DbSet<AttributeCategory> AttributeCategories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

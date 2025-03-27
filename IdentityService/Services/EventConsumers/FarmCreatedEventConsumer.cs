@@ -1,4 +1,5 @@
-﻿using IdentityService.Services.UserService;
+﻿using IdentityService.Extensions;
+using IdentityService.Services.UserService;
 using MassTransit;
 using Shared.Models.Events;
 
@@ -21,6 +22,6 @@ public class FarmCreatedEventConsumer(
         
         user.FarmId = farmCreatedEvent.FarmId;
         
-        await userService.UpdateUserAsync(user);
+        await userService.UpdateUserAsync(user.ToUpdateUserRequest());
     }
 }

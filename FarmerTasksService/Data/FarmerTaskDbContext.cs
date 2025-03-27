@@ -41,13 +41,15 @@ public class FarmerTaskDbContext(DbContextOptions<FarmerTaskDbContext> options) 
         var maintenanceCategoryId = Guid.Parse("6d57eb9f-c3d0-4fbe-8f35-a7fb5c906b91");
         var irrigationCategoryId = Guid.Parse("d332a3b8-af4d-460e-8c35-a6acfd2d71c8");
         var pestControlCategoryId = Guid.Parse("b01abce0-1604-483b-8c7d-ffc8de5c459e");
+        var fertilizationCategoryId = Guid.Parse("d64372d4-a7de-4b3b-a3c1-ba5edec17bc1");
         
         modelBuilder.Entity<TaskCategory>().HasData(
             new TaskCategory { Id = plantingCategoryId, Name = "Planting" },
             new TaskCategory { Id = harvestingCategoryId, Name = "Harvesting" },
             new TaskCategory { Id = maintenanceCategoryId, Name = "Maintenance" },
             new TaskCategory { Id = irrigationCategoryId, Name = "Irrigation" },
-            new TaskCategory { Id = pestControlCategoryId, Name = "Pest and Disease Control" }
+            new TaskCategory { Id = pestControlCategoryId, Name = "Pest and Disease Control" },
+            new TaskCategory { Id = fertilizationCategoryId, Name = "Fertilization" }
         );
     }
 }

@@ -3,7 +3,7 @@ using UserProfileService.Repositories.AttributeCategoryRepository;
 using UserProfileService.Repositories.ProfileAttributeRepository;
 using UserProfileService.Repositories.UserProfileRepository;
 
-namespace UserProfileService.Services;
+namespace UserProfileService.Services.UserProfileService;
 
 public class UserProfileService(
     IUserProfileRepository userProfileRepository,
@@ -124,5 +124,21 @@ public class UserProfileService(
     public async ValueTask<IEnumerable<ProfileAttribute>> GetAttributesAsync()
     {
         return await profileAttributeRepository.GetAllAsync();
+    }
+
+    public async ValueTask UpdateAttributesAsync(Guid userProfileId, List<string> attributeNames)
+    {
+        var userProfile = await userProfileRepository.GetByUserProfileIdAsync(userProfileId);
+
+        if (userProfile == null)
+        {
+            throw new ArgumentException($"User profile for user ID {userProfileId} not found.");
+        }
+
+        // Remove all existing attributes
+        userProfile.ProfileAttributes.Clear();
+
+        // Assign new attributes
+        await AssignAttributesAsync(userProfileId, attributeNames);
     }
 }

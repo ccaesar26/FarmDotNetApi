@@ -15,5 +15,7 @@ public record TaskDto(
     string? CategoryName,
     RecurrenceType Recurrence,
     DateTime? RecurrenceEndDate,
-    Guid FieldId
+    Guid FieldId,
+    int CommentsCount,
+    DateTime CreatedAt
 );

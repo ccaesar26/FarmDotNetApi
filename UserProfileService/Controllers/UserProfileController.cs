@@ -7,6 +7,7 @@ using Shared.Models.Events;
 using UserProfileService.Extensions;
 using UserProfileService.Models.Dtos;
 using UserProfileService.Services;
+using UserProfileService.Services.UserProfileService;
 
 namespace UserProfileService.Controllers;
 
@@ -99,7 +100,7 @@ public class UserProfileController(
     }
 
     [HttpPost("attributes/assign"), Authorize(Policy = "ManagerOnly")]
-    public async Task<IActionResult> AssignAttributeAsync([FromBody] AssignAttributesRequest request)
+    public async Task<IActionResult> AssignAttributeAsync([FromBody] AttributesRequest request)
     {
         try
         {
@@ -110,6 +111,14 @@ public class UserProfileController(
         {
             return BadRequest(new { message = e.Message });
         }
+    }
+    
+    [HttpPut("attributes/update"), Authorize(Policy = "ManagerOnly")]
+    public async Task<IActionResult> UpdateAttributeAsync([FromBody] AttributesRequest request)
+    {
+        await userProfileService.UpdateAttributesAsync(Guid.Parse(request.UserProfileId), request.AttributeNames);
+
+        return Ok();
     }
 
     [HttpPost("attributes/remove/{userId}"), Authorize(Policy = "ManagerOnly")]

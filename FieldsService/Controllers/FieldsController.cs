@@ -29,7 +29,7 @@ public class FieldsController(
         var claims = User.Claims.Select(c => new { c.Type, c.Value });
         return Ok(new { claims });
     }
-    
+
     [Authorize(Policy = "ManagerOnly")]
     [HttpGet("has-farm")]
     public IActionResult HasFarm()
@@ -91,18 +91,19 @@ public class FieldsController(
     }
 
     [Authorize(Policy = "ManagerOnly")]
-    [HttpPut("{fieldId:guid}")]
-    public async Task<IActionResult> UpdateFieldAsync(Guid fieldId, [FromBody] UpdateFieldRequest request)
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateFieldAsync([FromBody] UpdateFieldRequest request)
     {
         var farmId = farmAuthorizationService.GetFarmId();
-        if (request.FarmId != farmId)
+        if (farmId is null)
         {
-            return Forbid("You are not authorized to update fields for this farm.");
+            return BadRequest(new { message = "FarmId is required." });
         }
 
         try
         {
-            await fieldsService.UpdateFieldAsync(fieldId, request.FarmId, request.FieldName, request.FieldBoundary);
+            await fieldsService.UpdateFieldAsync(Guid.Parse(request.FieldId), farmId.Value, request.FieldName,
+                request.FieldBoundary);
             return Ok();
         }
         catch (Exception ex)
@@ -145,7 +146,7 @@ public class FieldsController(
         var exists = await fieldsService.FieldExistsByNameAsync(farmId, fieldName);
         return Ok(new { exists });
     }
-    
+
     [HttpGet("coordinates")]
     public async Task<IActionResult> GetFieldCoordinatesAsync()
     {
@@ -158,7 +159,7 @@ public class FieldsController(
         var coordinates = await fieldsService.GetFieldsCoordinatesAsync(farmId.Value);
         return Ok(new { coordinates });
     }
-    
+
     [HttpGet("cities")]
     public async Task<IActionResult> GetFieldsCitiesAsync()
     {
@@ -169,7 +170,7 @@ public class FieldsController(
         }
 
         var coordinates = await fieldsService.GetFieldsCoordinatesAsync(farmId.Value);
-        
+
         var cities = new HashSet<GeocodingResult>();
         foreach (var coordinate in coordinates)
         {
@@ -179,7 +180,7 @@ public class FieldsController(
                 cities.Add(city);
             }
         }
-        
+
         return Ok(cities.ToList());
     }
 }

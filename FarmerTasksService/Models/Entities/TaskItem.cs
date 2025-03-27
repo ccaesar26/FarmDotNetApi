@@ -46,4 +46,7 @@ public class TaskItem
     // Farm/Owner ID (add this)
     [Required]
     public Guid FarmId { get; set; }  // Assuming you'll use FarmId (more common)
+    
+    [Required]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

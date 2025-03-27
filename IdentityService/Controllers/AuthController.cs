@@ -45,8 +45,8 @@ public class AuthController(
         }
 
         tokenService.SetTokenInCookie(token, HttpContext);
-
-        return Ok(new { message = "Login successful" });
+        
+        return Ok(new { token });
     }
     
     [HttpPost("logout")]

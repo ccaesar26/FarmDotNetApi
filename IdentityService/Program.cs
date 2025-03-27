@@ -2,6 +2,7 @@ using System.Text;
 using IdentityService.Data;
 using IdentityService.Repositories;
 using IdentityService.Repositories.RoleRepository;
+using IdentityService.Repositories.UserRepository;
 using IdentityService.Services.AuthService;
 using IdentityService.Services.EventConsumers;
 using IdentityService.Services.TokenService;
@@ -21,11 +22,7 @@ var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new Exception("Jwt:Key not found."));
 
 builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = jwtSettings["Audience"];

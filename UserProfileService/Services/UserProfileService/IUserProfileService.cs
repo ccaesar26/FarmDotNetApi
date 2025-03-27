@@ -1,6 +1,6 @@
 ﻿using UserProfileService.Models.Entities;
 
-namespace UserProfileService.Services;
+namespace UserProfileService.Services.UserProfileService;
 
 public interface IUserProfileService
 {
@@ -17,4 +17,5 @@ public interface IUserProfileService
     ValueTask AssignAttributesAsync(Guid userProfileId, List<string> attributeNames);
     ValueTask RemoveAttributesAsync(Guid userId, List<Guid> attributeIds);
     ValueTask<IEnumerable<ProfileAttribute>> GetAttributesAsync();
+    ValueTask UpdateAttributesAsync(Guid userProfileId, List<string> attributeNames);
 }
