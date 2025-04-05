@@ -18,6 +18,7 @@ public static class TaskExtensions
         task.Recurrence,
         task.RecurrenceEndDate,
         task.FieldId,
+        task.CropId,
         task.Comments.Count,
         task.CreatedAt
     );

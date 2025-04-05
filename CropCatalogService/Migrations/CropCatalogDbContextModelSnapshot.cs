@@ -22,7 +22,7 @@ namespace CropCatalogService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CropCatalogService.Model.Entities.CropCatalogEntry", b =>
+            modelBuilder.Entity("CropCatalogService.Models.Entities.CropCatalogEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

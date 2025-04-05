@@ -129,6 +129,9 @@ namespace FarmerTasksService.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("CropId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
@@ -139,7 +142,7 @@ namespace FarmerTasksService.Migrations
                     b.Property<Guid>("FarmId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("FieldId")
+                    b.Property<Guid?>("FieldId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastGeneratedDate")

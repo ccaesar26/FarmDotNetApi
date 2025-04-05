@@ -25,8 +25,6 @@ public class TaskItem
     [Required]
     public required TaskStatus Status { get; set; }
 
-    // public Guid? AssignedUserId { get; set; }
-
     public Guid? CategoryId { get; set; }
     [ForeignKey("CategoryId")]
     public TaskCategory? Category { get; set; }
@@ -35,13 +33,13 @@ public class TaskItem
     public DateTime? RecurrenceEndDate { get; set; }
     public DateTime? LastGeneratedDate { get; set; }
     
-    public ICollection<TaskComment> Comments { get; set; } = new List<TaskComment>();
+    public virtual ICollection<TaskComment> Comments { get; init; } = new List<TaskComment>();
     
-    public ICollection<TaskAssignment> TaskAssignments { get; set; } = new List<TaskAssignment>();
+    public virtual ICollection<TaskAssignment> TaskAssignments { get; init; } = new List<TaskAssignment>();
     
-    // Field Relationship (One-to-Many for now)
-    [Required] // Assuming a task MUST be linked to a Field
-    public Guid FieldId { get; set; } // Foreign key to Field (in another service)
+    public Guid? FieldId { get; set; } // Foreign key to Field (in another service)
+    
+    public Guid? CropId { get; set; }
 
     // Farm/Owner ID (add this)
     [Required]

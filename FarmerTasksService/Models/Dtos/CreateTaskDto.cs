@@ -11,6 +11,7 @@ public record CreateTaskDto(
     Guid? CategoryId,
     RecurrenceType Recurrence,
     DateTime? RecurrenceEndDate,
-    Guid FieldId,
+    Guid? FieldId,
+    Guid? CropId,
     TaskStatus Status = TaskStatus.ToDo
 );

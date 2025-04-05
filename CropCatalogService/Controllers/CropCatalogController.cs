@@ -1,5 +1,4 @@
 ﻿using CropCatalogService.Model.Dtos;
-using CropCatalogService.Model.Entities;
 using CropCatalogService.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

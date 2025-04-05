@@ -12,5 +12,6 @@ public record UpdateTaskDto(
     Guid? CategoryId,
     RecurrenceType Recurrence,
     DateTime? RecurrenceEndDate,
-    Guid FieldId
+    Guid? FieldId,
+    Guid? CropId
 );
