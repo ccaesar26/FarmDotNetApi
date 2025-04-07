@@ -21,7 +21,7 @@ public class Crop
     public string? ImageLink { get; set; }
 
     [Required]
-    public required bool Perrenial { get; set; }
+    public required bool Perennial { get; set; }
 
     [Column(TypeName = "date")] // Specify date type in database
     public DateOnly ExpectedFirstHarvestDate { get; set; }
@@ -32,14 +32,16 @@ public class Crop
     [Required] 
     public required Guid FieldId { get; set; }
 
-    [Required]
-    public required Polygon? Surface { get; set; } // Store Polygon data, consider using spatial types
+    public Polygon? Surface { get; set; } // Store Polygon data, consider using spatial types
 
     [Required]
-    public required double Area { get; set; }
+    public double? Area { get; set; }
 
     [Required] 
     public Guid CropCatalogId { get; set; }
+    
+    [Required]
+    public required Guid FarmId { get; set; }
 
     // Navigation Properties
     public virtual ICollection<GrowthStageEvent> GrowthStageEvents { get; set; } = new List<GrowthStageEvent>();

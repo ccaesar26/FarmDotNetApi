@@ -1,9 +1,11 @@
 ﻿using FarmerTasksService.Extensions;
 using FarmerTasksService.Models.Dtos;
-using FarmerTasksService.Services;
+using FarmerTasksService.Services.TaskHub;
+using FarmerTasksService.Services.TaskService;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Shared.FarmAuthorizationService;
 using Shared.Models.Events;
 using TaskStatus = FarmerTasksService.Models.Enums.TaskStatus;
@@ -17,6 +19,7 @@ public class TasksController(
     ITaskService taskService,
     IFarmAuthorizationService farmAuthorizationService,
     IPublishEndpoint publishEndpoint,
+    IHubContext<TaskHub> hubContext,
     ILogger<TasksController> logger
 ) : ControllerBase
 {
@@ -34,6 +37,7 @@ public class TasksController(
         {
             var taskId = await taskService.CreateTaskAsync(dto, farmId.Value);
             await publishEndpoint.Publish(new TaskCreatedEvent(taskId));
+            await hubContext.Clients.All.SendAsync("TaskCreated");
             return Ok(taskId);
         }
         catch (Exception e)
@@ -94,6 +98,7 @@ public class TasksController(
         {
             await taskService.UpdateTaskAsync(id, dto);
             await publishEndpoint.Publish(new TaskUpdatedEvent(id));
+            await hubContext.Clients.All.SendAsync("TaskUpdated");
             return NoContent();
         }
         catch (Exception e)
@@ -215,6 +220,7 @@ public class TasksController(
         {
             await taskService.UpdateTaskStatusAsync(taskId, status);
             await publishEndpoint.Publish(new TaskStatusUpdatedEvent(taskId, status.ToString()));
+            await hubContext.Clients.All.SendAsync("TaskUpdated");
             return NoContent();
         }
         catch (KeyNotFoundException)

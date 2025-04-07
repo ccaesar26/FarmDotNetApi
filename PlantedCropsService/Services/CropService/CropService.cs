@@ -18,15 +18,15 @@ public class CropService(ICropRepository cropRepository, IUnitOfWork unitOfWork)
         return crop?.ToDto();
     }
 
-    public async ValueTask<IEnumerable<CropDto>> GetAllCropsAsync()
+    public async ValueTask<IEnumerable<CropDto>> GetAllCropsAsync(Guid farmId)
     {
-        var crops = await _cropRepository.GetAllAsync();
+        var crops = await _cropRepository.GetAllByFarmIdAsync(farmId);
         return crops.Select(c => c.ToDto());
     }
 
-    public async ValueTask<CropDto> AddCropAsync(CropCreateDto createDto)
+    public async ValueTask<CropDto> AddCropAsync(CropCreateDto createDto, Guid farmId)
     {
-        var cropEntity = createDto.ToEntity();
+        var cropEntity = createDto.ToEntity(farmId);
         await _cropRepository.AddAsync(cropEntity);
         await _unitOfWork.SaveChangesAsync();
         return cropEntity.ToDto();
@@ -45,7 +45,7 @@ public class CropService(ICropRepository cropRepository, IUnitOfWork unitOfWork)
         existingCrop.BinomialName = updateDto.BinomialName;
         existingCrop.CultivatedVariety = updateDto.CultivatedVariety;
         existingCrop.ImageLink = updateDto.ImageLink;
-        existingCrop.Perrenial = updateDto.Perrenial;
+        existingCrop.Perennial = updateDto.Perennial;
         existingCrop.ExpectedFirstHarvestDate = updateDto.ExpectedFirstHarvestDate;
         existingCrop.ExpectedLastHarvestDate = updateDto.ExpectedLastHarvestDate;
         existingCrop.FieldId = updateDto.FieldId;

@@ -2,7 +2,7 @@
 using FarmerTasksService.Models.Entities;
 using TaskStatus = FarmerTasksService.Models.Enums.TaskStatus;
 
-namespace FarmerTasksService.Services;
+namespace FarmerTasksService.Services.TaskService;
 
 public interface ITaskService
 {

@@ -131,7 +131,6 @@ app.MapControllers();
 
 app.UseCors("CorsPolicy"); // Apply CORS policy
 
-
 app.UseEndpoints(endpoints => { endpoints.MapHub<WeatherHub>("/weatherHub"); });
 
 app.Run();

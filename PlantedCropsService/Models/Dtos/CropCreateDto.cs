@@ -5,7 +5,7 @@ public record CropCreateDto(
     string BinomialName,
     string? CultivatedVariety,
     string? ImageLink,
-    bool Perrenial,
+    bool Perennial,
     DateOnly ExpectedFirstHarvestDate,
     DateOnly ExpectedLastHarvestDate,
     Guid FieldId,

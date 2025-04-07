@@ -11,8 +11,13 @@ public class CropRepository(CropsDbContext context) : GenericRepository<Crop>(co
 
     // Add any crop-specific repository methods implementation here if needed
     // Example:
-    public async Task<IEnumerable<Crop>> GetCropsByFieldIdAsync(Guid fieldId)
+    public async Task<IEnumerable<Crop?>> GetCropsByFieldIdAsync(Guid fieldId)
     {
         return await _context.Crops.Where(c => c.FieldId == fieldId).ToListAsync();
+    }
+
+    public async ValueTask<IEnumerable<Crop>> GetAllByFarmIdAsync(Guid farmId)
+    {
+        return await _context.Crops.Where(c => c.FieldId == farmId).ToListAsync();
     }
 }

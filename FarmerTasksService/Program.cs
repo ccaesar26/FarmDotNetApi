@@ -1,7 +1,8 @@
 using System.Text;
 using FarmerTasksService.Data;
 using FarmerTasksService.Repositories;
-using FarmerTasksService.Services;
+using FarmerTasksService.Services.TaskHub;
+using FarmerTasksService.Services.TaskService;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,7 @@ builder.Services
                 {
                     context.Token = token;
                 }
+
                 return Task.CompletedTask;
             }
         };
@@ -78,6 +80,21 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .WithOrigins("http://localhost:4200", "http://localhost:5800"); // Angular & Ocelot
+    });
+});
+
+// Add SignalR
+builder.Services.AddSignalR(options => { options.EnableDetailedErrors = true; });
+
 // Add MassTransit
 builder.Services.AddMassTransit(x =>
 {
@@ -98,6 +115,8 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.UseRouting();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -110,5 +129,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("CorsPolicy");
+
+// app.MapHub<TaskHub>("/taskHub");
+app.UseEndpoints(endpoints => { endpoints.MapHub<TaskHub>("/taskHub"); });
 
 app.Run();

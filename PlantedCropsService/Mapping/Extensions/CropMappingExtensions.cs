@@ -7,14 +7,13 @@ namespace PlantedCropsService.Mapping.Extensions;
 
 public static class CropMappingExtensions
 {
-    public static CropDto ToDto(this Crop crop) => new CropDto
-    (
+    public static CropDto ToDto(this Crop crop) => new(
         crop.Id,
         crop.Name,
         crop.BinomialName,
         crop.CultivatedVariety,
         crop.ImageLink,
-        crop.Perrenial,
+        crop.Perennial,
         crop.ExpectedFirstHarvestDate,
         crop.ExpectedLastHarvestDate,
         crop.FieldId,
@@ -23,35 +22,37 @@ public static class CropMappingExtensions
         crop.CropCatalogId
     );
 
-    public static Crop ToEntity(this CropCreateDto cropCreateDto) => new Crop
+    public static Crop ToEntity(this CropCreateDto cropCreateDto, Guid farmId) => new()
     {
         Name = cropCreateDto.Name,
         BinomialName = cropCreateDto.BinomialName,
         CultivatedVariety = cropCreateDto.CultivatedVariety,
         ImageLink = cropCreateDto.ImageLink,
-        Perrenial = cropCreateDto.Perrenial,
+        Perennial = cropCreateDto.Perennial,
         ExpectedFirstHarvestDate = cropCreateDto.ExpectedFirstHarvestDate,
         ExpectedLastHarvestDate = cropCreateDto.ExpectedLastHarvestDate,
         FieldId = cropCreateDto.FieldId,
         Surface = cropCreateDto.Surface != null ? ConvertGeoJsonToPolygon(cropCreateDto.Surface) : null,
         Area = cropCreateDto.Area,
-        CropCatalogId = cropCreateDto.CropCatalogId
+        CropCatalogId = cropCreateDto.CropCatalogId,
+        FarmId = farmId
     };
-    
-    public static Crop ToEntity(this CropUpdateDto cropUpdateDto) => new Crop
+
+    public static Crop ToEntity(this CropUpdateDto cropUpdateDto, Guid farmId) => new()
     {
         Id = cropUpdateDto.Id,
         Name = cropUpdateDto.Name,
         BinomialName = cropUpdateDto.BinomialName,
         CultivatedVariety = cropUpdateDto.CultivatedVariety,
         ImageLink = cropUpdateDto.ImageLink,
-        Perrenial = cropUpdateDto.Perrenial,
+        Perennial = cropUpdateDto.Perennial,
         ExpectedFirstHarvestDate = cropUpdateDto.ExpectedFirstHarvestDate,
         ExpectedLastHarvestDate = cropUpdateDto.ExpectedLastHarvestDate,
         FieldId = cropUpdateDto.FieldId,
         Surface = cropUpdateDto.Surface != null ? ConvertGeoJsonToPolygon(cropUpdateDto.Surface) : null,
         Area = cropUpdateDto.Area,
-        CropCatalogId = cropUpdateDto.CropCatalogId
+        CropCatalogId = cropUpdateDto.CropCatalogId,
+        FarmId = farmId
     };
 
     public static Polygon ConvertGeoJsonToPolygon(string geoJson)

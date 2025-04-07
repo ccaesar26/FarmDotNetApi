@@ -5,7 +5,7 @@ using FarmerTasksService.Models.Enums;
 using FarmerTasksService.Repositories;
 using TaskStatus = FarmerTasksService.Models.Enums.TaskStatus;
 
-namespace FarmerTasksService.Services;
+namespace FarmerTasksService.Services.TaskService;
 
 public class TaskService(
     ITaskRepository taskRepository,

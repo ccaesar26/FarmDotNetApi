@@ -6,11 +6,11 @@ public record CropDto(
     string BinomialName,
     string? CultivatedVariety,
     string? ImageLink,
-    bool Perrenial,
+    bool Perennial,
     DateOnly ExpectedFirstHarvestDate,
     DateOnly ExpectedLastHarvestDate,
     Guid FieldId,
     string? Surface,
-    double Area,
+    double? Area,
     Guid CropCatalogId
 );

@@ -100,21 +100,6 @@
       ]
     },
     {
-      "DownstreamPathTemplate": "/weatherHub",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5805
-        }
-      ],
-      "UpstreamPathTemplate": "/weatherHub",
-      "UpstreamHttpMethod": [
-        "GET",
-        "POST"
-      ]
-    },
-    {
       "DownstreamPathTemplate": "/api/drought-data/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -154,10 +139,27 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5808
+          "Port": 5809
         }
       ],
       "UpstreamPathTemplate": "/api/cropcatalog/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/crops/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5809
+        }
+      ],
+      "UpstreamPathTemplate": "/api/crops/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
@@ -180,6 +182,36 @@
         "POST",
         "PUT",
         "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/weatherHub",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5805
+        }
+      ],
+      "UpstreamPathTemplate": "/weatherHub",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/taskHub",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5807
+        }
+      ],
+      "UpstreamPathTemplate": "/taskHub",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
       ]
     }
   ],
