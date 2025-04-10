@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using PlantedCropsService.Data;
 namespace PlantedCropsService.Migrations
 {
     [DbContext(typeof(CropsDbContext))]
-    partial class CropsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409101548_AddedColumns")]
+    partial class AddedColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,9 +124,6 @@ namespace PlantedCropsService.Migrations
 
                     b.Property<bool>("Perennial")
                         .HasColumnType("boolean");
-
-                    b.Property<DateOnly>("PlantingDate")
-                        .HasColumnType("date");
 
                     b.Property<Polygon>("Surface")
                         .HasColumnType("geometry");

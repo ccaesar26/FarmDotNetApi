@@ -57,6 +57,29 @@ public class WeatherService(
         return weather;
     }
     
+    public async ValueTask<DailyForecastResponseDto?> GetDailyForecastAsync(double latitude, double longitude, int cnt = 16)
+    {
+        var cacheKey = $"forecast:{latitude},{longitude}:{cnt}";
+        if (cache.TryGetValue(cacheKey, out DailyForecastResponseDto? forecast))
+        {
+            return forecast;
+        }
+
+        var apiKey = configuration["OpenWeatherMap:ApiKey"];
+        var apiUrl = configuration["OpenWeatherMap:ApiUrl"];
+
+        var url = apiUrl + $"forecast/daily?lat={latitude}&lon={longitude}&cnt={cnt}&appid={apiKey}&units=metric";
+
+        forecast = await GetDailyForecastFromUrlAsync(url);
+        if (forecast is null)
+        {
+            return null;
+        }
+
+        cache.Set(cacheKey, forecast, _cacheDuration);
+        return forecast;
+    }
+
     private async ValueTask<FarmWeatherDto?> GetWeatherFromUrlAsync(string url)
     {
         var response = await httpClient.GetAsync(url);
@@ -68,5 +91,18 @@ public class WeatherService(
         var content = await response.Content.ReadAsStringAsync();
         var weatherData = JsonSerializer.Deserialize<WeatherData>(content);
         return weatherData?.ToFarmWeatherDto();
+    }
+
+    private async ValueTask<DailyForecastResponseDto?> GetDailyForecastFromUrlAsync(string url)
+    {
+        var response = await httpClient.GetAsync(url);
+        if (!response.IsSuccessStatusCode)
+        {
+            return null;
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+        var forecastData = JsonSerializer.Deserialize<DailyForecastResponseDto>(content);
+        return forecastData;
     }
 }

@@ -18,6 +18,6 @@ public class CropRepository(CropsDbContext context) : GenericRepository<Crop>(co
 
     public async ValueTask<IEnumerable<Crop>> GetAllByFarmIdAsync(Guid farmId)
     {
-        return await _context.Crops.Where(c => c.FieldId == farmId).ToListAsync();
+        return await _context.Crops.Where(c => c.FarmId == farmId).ToListAsync();
     }
 }

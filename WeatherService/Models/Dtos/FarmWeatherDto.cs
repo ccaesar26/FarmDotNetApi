@@ -12,30 +12,4 @@ public record FarmWeatherDto(
     TimeOnly Sunrise,
     TimeOnly Sunset,
     int Code
-)
-{
-    public WeatherResponse ToWeatherResponse()
-    {
-        return new WeatherResponse(
-            Location,
-            Temperature,
-            FeelsLike,
-            Humidity,
-            Pressure,
-            WindSpeed,
-            WindGust,
-            CloudCoverage,
-            Sunrise,
-            Sunset,
-            string.Empty,
-            string.Empty,
-            string.Empty
-        );
-    }
-
-    public bool IsDay()
-    {
-        var now = TimeOnly.FromDateTime(DateTime.UtcNow);
-        return now >= Sunrise && now <= Sunset;
-    }
-}
+);

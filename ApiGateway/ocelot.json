@@ -139,7 +139,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5809
+          "Port": 5808
         }
       ],
       "UpstreamPathTemplate": "/api/cropcatalog/{everything}",

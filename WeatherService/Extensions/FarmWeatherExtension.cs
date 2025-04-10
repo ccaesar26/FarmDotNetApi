@@ -17,4 +17,29 @@ public static class FarmWeatherExtension
         TimeOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(w.sys.sunset).DateTime),
         w.weather[0].id
     );
+    
+    public static WeatherResponse ToWeatherResponse(this FarmWeatherDto weatherData)
+    {
+        return new WeatherResponse(
+            weatherData.Location,
+            weatherData.Temperature,
+            weatherData.FeelsLike,
+            weatherData.Humidity,
+            weatherData.Pressure,
+            weatherData.WindSpeed,
+            weatherData.WindGust,
+            weatherData.CloudCoverage,
+            weatherData.Sunrise,
+            weatherData.Sunset,
+            string.Empty,
+            string.Empty,
+            string.Empty
+        );
+    }
+
+    public static bool IsDay(this FarmWeatherDto weatherData)
+    {
+        var now = TimeOnly.FromDateTime(DateTime.UtcNow);
+        return now >= weatherData.Sunrise && now <= weatherData.Sunset;
+    }
 }

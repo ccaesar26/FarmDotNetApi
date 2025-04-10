@@ -6,6 +6,8 @@ public record CreateCropCatalogDto(
     bool IsPerennial,
     int? DaysToFirstHarvest,
     int? DaysToLastHarvest,
+    int? MinMonthsToBearFruit,
+    int? MaxMonthsToBearFruit,
     DateOnly? HarvestSeasonStart,
     DateOnly? HarvestSeasonEnd,
     string? Description,

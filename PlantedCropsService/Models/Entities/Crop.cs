@@ -19,15 +19,30 @@ public class Crop
     public string? CultivatedVariety { get; set; }
 
     public string? ImageLink { get; set; }
+    
+    [Required, Column(TypeName = "date")]
+    public required DateOnly PlantingDate { get; set; }
 
     [Required]
     public required bool Perennial { get; set; }
 
     [Column(TypeName = "date")] // Specify date type in database
-    public DateOnly ExpectedFirstHarvestDate { get; set; }
+    public DateOnly? ExpectedFirstHarvestDate { get; set; }
 
     [Column(TypeName = "date")] // Specify date type in database
-    public DateOnly ExpectedLastHarvestDate { get; set; }
+    public DateOnly? ExpectedLastHarvestDate { get; set; }
+
+    [Column(TypeName = "date")] // Specify date type in database
+    public DateOnly? ExpectedFirstHarvestStartDate { get; set; }
+
+    [Column(TypeName = "date")] // Specify date type in database
+    public DateOnly? ExpectedFirstHarvestEndDate { get; set; }
+
+    [Column(TypeName = "date")] // Specify date type in database
+    public DateOnly? ExpectedLastHarvestStartDate { get; set; }
+
+    [Column(TypeName = "date")] // Specify date type in database
+    public DateOnly? ExpectedLastHarvestEndDate { get; set; }
 
     [Required] 
     public required Guid FieldId { get; set; }
