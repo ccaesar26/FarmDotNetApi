@@ -28,7 +28,7 @@ public class UsersController(
         {
             return Unauthorized();
         }
-        
+
         try
         {
             var userId = await userService.CreateUserAsync(
@@ -45,6 +45,7 @@ public class UsersController(
             return BadRequest(new { message = ex.Message });
         }
     }
+
     [Authorize(Policy = "ManagerOnly")]
     [HttpPut("update")]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequest request)
@@ -65,7 +66,7 @@ public class UsersController(
             return BadRequest(new { message = ex.Message });
         }
     }
-    
+
     [Authorize(Policy = "ManagerOnly")]
     [HttpDelete("{userId}")]
     public async Task<IActionResult> DeleteUserAsync(Guid userId)
@@ -87,7 +88,7 @@ public class UsersController(
             return BadRequest(new { message = ex.Message });
         }
     }
-    
+
     [Authorize(Policy = "ManagerOnly")]
     [HttpPut("update-farm-id")]
     public async Task<IActionResult> UpdateFarmIdAsync([FromBody] UpdateFarmRequest request)
@@ -117,7 +118,7 @@ public class UsersController(
 
         return Ok();
     }
-    
+
     [HttpGet("me")]
     public async ValueTask<IActionResult> GetUserRole()
     {
@@ -126,27 +127,27 @@ public class UsersController(
         {
             return Unauthorized();
         }
-        
+
         var roleClaim = User.FindFirst(FarmClaimTypes.Role);
         if (roleClaim == null)
         {
             return Unauthorized(new { message = "User role not found" });
         }
-        
+
         var user = await userService.GetUserAsync(userId.Value);
         if (user is null)
         {
             return Unauthorized(new { message = "User not found" });
         }
-        
+
         if (user.Role.Name != roleClaim.Value)
         {
             return Unauthorized();
         }
-        
+
         return Ok(new { username = user.Username, email = user.Email, role = roleClaim.Value });
     }
-    
+
     [HttpGet("workers")]
     public async Task<IActionResult> GetWorkersAsync()
     {
@@ -158,5 +159,41 @@ public class UsersController(
 
         var workers = await userService.GetWorkersAsync(farmId);
         return Ok(workers.ToArray());
+    }
+    
+    [HttpGet("user")]
+    public async ValueTask<IActionResult> GetUserAsync()
+    {
+        var userId = farmAuthorizationService.GetUserId();
+        if (userId == null || string.IsNullOrEmpty(userId.ToString()))
+        {
+            return Unauthorized("User not found in claims");
+        }
+
+        var user = await userService.GetUserAsync(userId.Value);
+        if (user is null)
+        {
+            return NotFound("User not found in database");
+        }
+
+        return Ok(user.ToDto());
+    }
+
+    [HttpGet("username/{userId}")]
+    public async ValueTask<IActionResult> GetUsernameAsync(Guid userId)
+    {
+        var farmId = farmAuthorizationService.GetFarmId();
+        if (farmId == null || string.IsNullOrEmpty(farmId.ToString()))
+        {
+            return Unauthorized();
+        }
+
+        var user = await userService.GetUserAsync(userId);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(new { username = user.Username });
     }
 }

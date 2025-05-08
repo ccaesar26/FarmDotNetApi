@@ -7,5 +7,6 @@ public interface ITokenService
 {
     string GenerateJwtToken(User user);
     FarmClaimTypes.FarmClaimDto? ValidateJwt(string jwt);
-    void SetTokenInCookie(string token, HttpContext context);
+    void SetAuthTokenInCookie(string token, HttpContext context);
+    void SetRefreshTokenInCookie(string token, HttpContext context);
 }

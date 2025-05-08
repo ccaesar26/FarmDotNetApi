@@ -37,48 +37,59 @@ public class AuthController(
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var token = await authService.AuthenticateAsync(request.Email, request.Password);
+        var result = await authService.LoginAsync(request.Email, request.Password);
 
-        if (token == null)
+        if (result.ErrorMessage != string.Empty)
         {
-            return Unauthorized("Invalid credentials");
+            return BadRequest(new { message = result.ErrorMessage });
         }
 
-        tokenService.SetTokenInCookie(token, HttpContext);
-        
-        return Ok(new { token });
+        tokenService.SetAuthTokenInCookie(result.AccessToken, HttpContext);
+        tokenService.SetRefreshTokenInCookie(result.RefreshToken, HttpContext);
+
+        return Ok(new { AccessToken = result.AccessToken, RefreshToken = result.RefreshToken });
     }
-    
+
     [HttpPost("logout")]
     public IActionResult Logout()
     {
         Response.Cookies.Delete("AuthToken");
+        Response.Cookies.Delete("RefreshToken");
         return Ok(new { message = "Logged out" });
     }
 
-    
+
     [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken()
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto requestDto)
     {
-        var jwt = Request.Cookies["AuthToken"];
-        if (string.IsNullOrEmpty(jwt))
+        var refreshToken = requestDto.RefreshToken;
+        if (string.IsNullOrEmpty(refreshToken))
         {
-            return Unauthorized();
+            // Fallback to cookie if needed for web (optional)
+            refreshToken = Request.Cookies["RefreshToken"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return Unauthorized("Refresh token is missing");
+            }
         }
 
-        var userClaim = tokenService.ValidateJwt(jwt);
-        if (userClaim == null)
+        var refreshResult = await authService.RefreshAccessTokenAsync(refreshToken);
+
+        if (!refreshResult.Success)
         {
-            return Unauthorized();
+            return Unauthorized(new { message = refreshResult.ErrorMessage });
         }
 
-        var user = await userService.GetUserAsync(new Guid(userClaim.UserId));
+        tokenService.SetAuthTokenInCookie(refreshResult.AccessToken, HttpContext);
+        tokenService.SetRefreshTokenInCookie(refreshResult.RefreshToken, HttpContext);
 
-        var newToken = tokenService.GenerateJwtToken(user ?? throw new InvalidOperationException());
-
-        Response.Cookies.Delete("AuthToken");
-        tokenService.SetTokenInCookie(newToken, HttpContext);
-
-        return Ok(new { message = "Token refreshed" });
+        return Ok(new
+        {
+            Message = "Token refreshed", 
+            AccessToken = refreshResult.AccessToken,
+            RefreshToken = refreshResult.RefreshToken
+        });
     }
 }
+
+public record RefreshTokenRequestDto(string RefreshToken);

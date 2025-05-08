@@ -168,6 +168,23 @@
       ]
     },
     {
+      "DownstreamPathTemplate": "/api/reports/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5810
+        }
+      ],
+      "UpstreamPathTemplate": "/api/reports/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
       "DownstreamPathTemplate": "/api/config/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -209,6 +226,21 @@
         }
       ],
       "UpstreamPathTemplate": "/taskHub",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/reportHub",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5810
+        }
+      ],
+      "UpstreamPathTemplate": "/reportHub",
       "UpstreamHttpMethod": [
         "GET",
         "POST"

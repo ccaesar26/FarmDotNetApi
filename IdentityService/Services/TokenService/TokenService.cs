@@ -75,11 +75,23 @@ public class TokenService(IConfiguration configuration) : ITokenService
         }
     }
 
-    public void SetTokenInCookie(string token, HttpContext context)
+    public void SetAuthTokenInCookie(string token, HttpContext context)
     {
         context.Response.Cookies.Append("AuthToken", token, new CookieOptions
         {
             Expires = DateTime.UtcNow.AddMinutes(double.Parse(configuration["Jwt:AccessTokenExpiryMinutes"] ?? "60")),  
+            HttpOnly = true,
+            IsEssential = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict
+        });
+    }
+
+    public void SetRefreshTokenInCookie(string token, HttpContext context)
+    {
+        context.Response.Cookies.Append("RefreshToken", token, new CookieOptions
+        {
+            Expires = DateTime.UtcNow.AddDays(double.Parse(configuration["Jwt:RefreshTokenExpiryDays"] ?? "30")),
             HttpOnly = true,
             IsEssential = true,
             Secure = true,

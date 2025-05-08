@@ -31,7 +31,7 @@ public class TaskRepository(FarmerTaskDbContext context) : ITaskRepository
 
         if (filter == null) return await tasks.ToListAsync();
 
-        var query = tasks.AsQueryable();
+        var query = tasks.AsQueryable().Where(t => t.FarmId == farmId);
 
         if (filter.Status.HasValue)
         {

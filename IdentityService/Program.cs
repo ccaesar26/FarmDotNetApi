@@ -1,10 +1,12 @@
 using System.Text;
 using IdentityService.Data;
 using IdentityService.Repositories;
+using IdentityService.Repositories.RefreshTokenRepository;
 using IdentityService.Repositories.RoleRepository;
 using IdentityService.Repositories.UserRepository;
 using IdentityService.Services.AuthService;
 using IdentityService.Services.EventConsumers;
+using IdentityService.Services.RefreshTokenService;
 using IdentityService.Services.TokenService;
 using IdentityService.Services.UserService;
 using MassTransit;
@@ -68,9 +70,11 @@ builder.Services.AddScoped<IFarmAuthorizationService, FarmAuthorizationService>(
 // Add Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
 // Add Services
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
