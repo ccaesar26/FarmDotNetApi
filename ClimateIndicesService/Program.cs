@@ -1,14 +1,18 @@
 using System.Text;
 using ClimateIndicesService.Data;
 using ClimateIndicesService.ExternalClients.EdoApiClient;
+using ClimateIndicesService.Models.Dtos;
 using ClimateIndicesService.Repositories;
 using ClimateIndicesService.Services.DroughtAnalysisService;
 using ClimateIndicesService.Services.DroughtRecordService;
+using ClimateIndicesService.Services.NdviMapService;
+using ClimateIndicesService.Services.NdviService;
+using ClimateIndicesService.Services.WekeoTokenService;
 using MaxRev.Gdal.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Shared.FarmClaimTypes;
+using Shared.Models.FarmClaimTypes;
 
 GdalBase.ConfigureAll();
 
@@ -68,14 +72,34 @@ builder.Services.AddDbContext<ClimateIndicesDbContext>(options =>
 // Register IHttpContextAccessor (required for FarmAuthorizationService)
 builder.Services.AddHttpContextAccessor();
 
+// Configuration
+builder.Services.Configure<WekeoApiSettings>(builder.Configuration.GetSection("WekeoApiSettings"));
+builder.Services.Configure<VitoWmsSettings>(builder.Configuration.GetSection("VitoWmsSettings"));
+builder.Services.Configure<VitoWmsNdviSettings>(builder.Configuration.GetSection("VitoWmsNdviSettings"));
+
 // Register services
 builder.Services.AddHttpClient<IEdoApiClient, EdoApiClient>();
+
+// HttpClientFactory and typed clients
+builder.Services.AddHttpClient("WekeoApiClient"); // Generic client for WEkEO if needed elsewhere
+builder.Services.AddHttpClient("VitoWmsClient") // Client for VITO WMS
+    .ConfigureHttpClient(client =>
+    {
+        // You could set a default User-Agent or Timeout here if desired
+        // client.Timeout = TimeSpan.FromSeconds(30);
+    });
 
 builder.Services.AddScoped<IDroughtRecordRepository, DroughtRecordRepository>();
 builder.Services.AddScoped<IDroughtRasterRepository, GdalDroughtRasterRepository>();
 
 builder.Services.AddScoped<IDroughtRecordService, DroughtRecordService>();
 builder.Services.AddScoped<IDroughtAnalysisService, DroughtAnalysisService>();
+
+// Services
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<IWekeoTokenService, WekeoTokenService>(); // Singleton for token caching logic
+builder.Services.AddScoped<INdviService, NdviService>();
+builder.Services.AddScoped<INdviMapService, NdviMapService>();
 
 builder.Services.AddControllers();
 

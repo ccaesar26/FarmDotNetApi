@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Quartz;
-using Shared.FarmClaimTypes;
+using Shared.Models.FarmClaimTypes;
 using WeatherService.Converters;
 using WeatherService.Data;
 using WeatherService.Repositories;

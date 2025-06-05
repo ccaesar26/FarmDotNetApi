@@ -3,6 +3,6 @@
 public interface IFarmAuthorizationService
 {
     Guid? GetFarmId();
-
-    public Guid? GetUserId();
+    Guid? GetUserId();
+    string GetUserRole();
 }

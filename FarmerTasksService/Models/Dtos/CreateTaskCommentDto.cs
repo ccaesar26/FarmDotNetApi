@@ -2,6 +2,5 @@
 
 public record CreateTaskCommentDto(
     Guid TaskId,
-    Guid UserId,
     string Comment
 );

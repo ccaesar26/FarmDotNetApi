@@ -6,7 +6,6 @@ using FieldsService.Services.GeocodingService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Scalar.AspNetCore;
 using Shared.FarmAuthorizationService;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.FarmAuthorizationService;
-using Shared.FarmClaimTypes;
+using Shared.Models.FarmClaimTypes;
 
 var builder = WebApplication.CreateBuilder(args);
 

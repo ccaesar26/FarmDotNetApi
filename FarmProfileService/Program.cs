@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Shared.FarmAuthorizationService;
-using Shared.FarmClaimTypes;
+using Shared.Models.FarmClaimTypes;
 
 var builder = WebApplication.CreateBuilder(args);
 

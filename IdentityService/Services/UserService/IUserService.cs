@@ -16,4 +16,5 @@ public interface IUserService
 
     ValueTask<IEnumerable<User>> GetWorkersAsync(Guid? farmId);
     ValueTask DeleteUserAsync(Guid userId);
+    ValueTask<User?> GetWorkerAsync(Guid userId, Guid farmId);
 }

@@ -17,6 +17,6 @@ public interface ITaskService
     ValueTask<List<TaskDto>> GetMyTasksAsync(Guid userId, int pageNumber, int pageSize);
     ValueTask<List<TaskCategory>> GetTaskCategoriesAsync();
     ValueTask GenerateRecurringTasksAsync();
-    ValueTask<Guid> AddCommentAsync(CreateTaskCommentDto dto);
+    ValueTask<Guid> AddCommentAsync(TaskCommentDto dto);
     ValueTask<List<TaskCommentDto>> GetCommentsByTaskIdAsync(Guid taskId);
 }

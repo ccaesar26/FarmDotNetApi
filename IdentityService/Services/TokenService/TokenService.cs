@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using IdentityService.Models;
 using Microsoft.IdentityModel.Tokens;
-using Shared.FarmClaimTypes;
+using Shared.Models.FarmClaimTypes;
 
 namespace IdentityService.Services.TokenService;
 
@@ -23,7 +23,7 @@ public class TokenService(IConfiguration configuration) : ITokenService
                 new Claim(FarmClaimTypes.FarmId, user.FarmId?.ToString() ?? string.Empty),
                 new Claim(FarmClaimTypes.UserProfileId, user.UserProfileId?.ToString() ?? string.Empty)
             ]),
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["AccessTokenExpiryMinutes"] ?? "60")),
+            Expires = DateTime.UtcNow.AddHours(double.Parse(jwtSettings["AccessTokenExpiryHours"] ?? "24")),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             Issuer = jwtSettings["Issuer"],
             Audience = jwtSettings["Audience"]
@@ -79,7 +79,7 @@ public class TokenService(IConfiguration configuration) : ITokenService
     {
         context.Response.Cookies.Append("AuthToken", token, new CookieOptions
         {
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(configuration["Jwt:AccessTokenExpiryMinutes"] ?? "60")),  
+            Expires = DateTime.UtcNow.AddSeconds(double.Parse(configuration["Jwt:AccessTokenExpirySeconds"] ?? "60")),  
             HttpOnly = true,
             IsEssential = true,
             Secure = true,

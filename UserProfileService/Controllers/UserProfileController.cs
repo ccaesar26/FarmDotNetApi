@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;
-using Shared.FarmClaimTypes;
 using Shared.Models.Events;
 using UserProfileService.Extensions;
 using UserProfileService.Models.Dtos;

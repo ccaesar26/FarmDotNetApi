@@ -86,4 +86,20 @@ public class UserService(IUserRepository userRepository, IRoleRepository roleRep
     { 
         await userRepository.DeleteUserAsync(userId);
     }
+
+    public async ValueTask<User?> GetWorkerAsync(Guid userId, Guid farmId)
+    {
+        var user = await userRepository.GetUserByIdAsync(userId);
+        if (user == null || user.FarmId != farmId)
+        {
+            return null;
+        }
+        
+        if (user.Role.Name != "Worker")
+        {
+            throw new InvalidOperationException("User is not a worker.");
+        }
+
+        return user;
+    }
 }

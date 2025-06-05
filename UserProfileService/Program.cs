@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.FarmAuthorizationService;
-using Shared.FarmClaimTypes;
+using Shared.Models.FarmClaimTypes;
 using UserProfileService.Converters;
 using UserProfileService.Data;
 using UserProfileService.Repositories.AttributeCategoryRepository;

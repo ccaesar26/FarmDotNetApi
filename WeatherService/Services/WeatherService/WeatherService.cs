@@ -57,7 +57,7 @@ public class WeatherService(
         return weather;
     }
     
-    public async ValueTask<DailyForecastResponseDto?> GetDailyForecastAsync(double latitude, double longitude, int cnt = 16)
+    public async ValueTask<DailyForecastResponseDto?> GetDailyForecastAsync(double latitude, double longitude, int cnt = 30)
     {
         var cacheKey = $"forecast:{latitude},{longitude}:{cnt}";
         if (cache.TryGetValue(cacheKey, out DailyForecastResponseDto? forecast))
@@ -68,7 +68,7 @@ public class WeatherService(
         var apiKey = configuration["OpenWeatherMap:ApiKey"];
         var apiUrl = configuration["OpenWeatherMap:ApiUrl"];
 
-        var url = apiUrl + $"forecast/daily?lat={latitude}&lon={longitude}&cnt={cnt}&appid={apiKey}&units=metric";
+        var url = apiUrl + $"forecast/climate?lat={latitude}&lon={longitude}&cnt={cnt}&appid={apiKey}&units=metric";
 
         forecast = await GetDailyForecastFromUrlAsync(url);
         if (forecast is null)

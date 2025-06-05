@@ -24,11 +24,12 @@ public class TasksController(
 ) : ControllerBase
 {
     [HttpPost]
-    [Authorize(Policy = "ManagerAndWorkers")]
+    [Authorize(Policy = "ManagerOnly")]
     public async ValueTask<IActionResult> CreateTask([FromBody] CreateTaskDto dto)
     {
         var farmId = farmAuthorizationService.GetFarmId();
-        if (farmId.HasValue == false)
+        var userId = farmAuthorizationService.GetUserId();
+        if (farmId.HasValue == false || userId == null || string.IsNullOrEmpty(farmAuthorizationService.GetUserRole()))
         {
             return Unauthorized();
         }
@@ -36,7 +37,7 @@ public class TasksController(
         try
         {
             var taskId = await taskService.CreateTaskAsync(dto, farmId.Value);
-            await publishEndpoint.Publish(new TaskCreatedEvent(taskId));
+            await publishEndpoint.Publish(new TaskCreatedEvent(taskId, farmId.Value, userId.Value, DateTime.UtcNow));
             await hubContext.Clients.All.SendAsync("TaskCreated");
             return Ok(taskId);
         }
@@ -268,20 +269,27 @@ public class TasksController(
         return Ok(categories.Select(c => c.ToDto()));
     }
 
-    [HttpPost("{taskId}/comments")]
+    [HttpPost("comment")]
     [Authorize(Policy = "ManagerAndWorkers")]
-    public async ValueTask<IActionResult> AddComment(Guid taskId, [FromBody] CreateTaskCommentDto dto)
+    public async ValueTask<IActionResult> AddComment([FromBody] CreateTaskCommentDto dto)
     {
         var farmId = farmAuthorizationService.GetFarmId();
-        if (farmId == null)
+        var userId = farmAuthorizationService.GetUserId();
+        var role = farmAuthorizationService.GetUserRole();
+        if (farmId == null || userId == null || string.IsNullOrEmpty(role))
         {
             return Unauthorized();
         }
+        
+        var comment = new TaskCommentDto(Guid.Empty, dto.TaskId, userId.Value, DateTime.UtcNow, dto.Comment);
 
         try
         {
-            var commentId = await taskService.AddCommentAsync(dto);
-            await publishEndpoint.Publish(new TaskCommentAddedEvent(commentId, taskId));
+            var commentId = await taskService.AddCommentAsync(comment);
+            await publishEndpoint.Publish(new TaskCommentAddedEvent(commentId, comment.TaskId));
+            await hubContext.Clients.All.SendAsync("CommentAddedToTask", comment.TaskId, commentId);
+            await hubContext.Clients.All.SendAsync("TaskUpdated");
+            
             return Ok(commentId);
         }
         catch (KeyNotFoundException)

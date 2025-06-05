@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Shared.FarmClaimTypes;
+namespace Shared.Models.FarmClaimTypes;
 
 public static class FarmClaimTypes
 {

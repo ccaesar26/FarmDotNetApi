@@ -1,5 +1,5 @@
 ﻿using IdentityService.Models;
-using Shared.FarmClaimTypes;
+using Shared.Models.FarmClaimTypes;
 
 namespace IdentityService.Services.TokenService;
 

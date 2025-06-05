@@ -6,9 +6,9 @@ namespace ReportsService.Services.ReportHub;
 
 public class ReportHub : Hub
 {
-    public async Task NotifyReportCreated(ReportCreatedEvent eventData)
+    public async Task NotifyReportCreated(ReportCreatedSignalREvent signalREventData)
     {
-        await Clients.All.SendAsync("ReportCreated", eventData);
+        await Clients.All.SendAsync("ReportCreated", signalREventData);
     }
 
     public async Task NotifyReportUpdated(string message)

@@ -29,4 +29,15 @@ public class FarmAuthorizationService(IHttpContextAccessor httpContextAccessor) 
         }
         return Guid.Parse(claim.Value);
     }
+
+    public string GetUserRole()
+    {
+        var claim = httpContextAccessor.HttpContext?.User.FindFirst("role");
+        if (claim == null)
+        {
+            throw new UnauthorizedAccessException("Role is missing from token.");
+        }
+        
+        return claim.Value;
+    }
 }

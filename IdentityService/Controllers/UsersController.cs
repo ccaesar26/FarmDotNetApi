@@ -5,8 +5,8 @@ using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.FarmAuthorizationService;
-using Shared.FarmClaimTypes;
 using Shared.Models.Events;
+using Shared.Models.FarmClaimTypes;
 
 namespace IdentityService.Controllers;
 
@@ -146,6 +146,29 @@ public class UsersController(
         }
 
         return Ok(new { username = user.Username, email = user.Email, role = roleClaim.Value });
+    }
+    
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> GetUserAsync([FromRoute] string userId)
+    {
+        var farmId = farmAuthorizationService.GetFarmId();
+        if (farmId == null || string.IsNullOrEmpty(farmId.ToString()))
+        {
+            return Unauthorized();
+        }
+
+        var user = await userService.GetUserAsync(Guid.Parse(userId));
+        if (user is null)
+        {
+            return NotFound("User not found in database. ID: " + userId);
+        }
+        
+        if (user.FarmId != farmId)
+        {
+            return Unauthorized("User does not belong to this farm");
+        }
+
+        return Ok(user.ToDto());
     }
 
     [HttpGet("workers")]

@@ -27,7 +27,9 @@ public class TaskRepository(FarmerTaskDbContext context) : ITaskRepository
         int pageSize = int.MaxValue)
     {
         var tasks = context.Tasks
-            .Include(t => t.Category);
+            .Include(t => t.Category)
+            .Include(t => t.TaskAssignments)
+            .Include(t => t.Comments);
 
         if (filter == null) return await tasks.ToListAsync();
 
@@ -63,6 +65,7 @@ public class TaskRepository(FarmerTaskDbContext context) : ITaskRepository
             .Take(pageSize)
             .Include(t => t.Category)
             .Include(ta => ta.TaskAssignments)
+            .Include(ta => ta.Comments)
             .ToListAsync();
     }
 

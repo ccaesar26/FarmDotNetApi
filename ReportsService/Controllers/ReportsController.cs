@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using ReportsService.Models.Dtos;
@@ -6,6 +7,7 @@ using ReportsService.Models.Events;
 using ReportsService.Services.ReportHub;
 using ReportsService.Services.ReportService;
 using Shared.FarmAuthorizationService;
+using Shared.Models.Events;
 
 namespace ReportsService.Controllers;
 
@@ -13,10 +15,10 @@ namespace ReportsService.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 public class ReportsController(
-    Supabase.Client supabaseClient,
     IReportService reportService,
     IFarmAuthorizationService authorizationService,
     IHubContext<ReportHub> reportHub,
+    IPublishEndpoint publishEndpoint,
     ILogger<ReportsController> logger
 ) : ControllerBase
 {
@@ -41,11 +43,18 @@ public class ReportsController(
         try
         {
             var reportId = await reportService.CreateReportAsync(dto, farmId.Value, createdByUserId.Value);
-            // Optionally publish ReportCreatedEvent (consider what data is needed)
-            // await _publishEndpoint.Publish(new ReportCreatedEvent(reportId, farmId, createdByUserId.Value, DateTime.UtcNow));
+            
+            await publishEndpoint.Publish(new ReportCreatedEvent(
+                reportId,
+                farmId.Value,
+                createdByUserId.Value,
+                DateTime.UtcNow // Or get the CreatedAt from the created report entity
+            ));
+            logger.LogInformation("Published ReportCreatedEvent for ReportId: {ReportId}", reportId);
+            
             // Notify all clients about the new report
             await reportHub.Clients.All.SendAsync("ReportCreated",
-                new ReportCreatedEvent(reportId, farmId.Value, createdByUserId.Value));
+                new ReportCreatedSignalREvent(reportId, farmId.Value, createdByUserId.Value));
             return CreatedAtAction(nameof(GetReport), new { id = reportId }, new { reportId });
         }
         catch (Exception ex)
@@ -174,7 +183,8 @@ public class ReportsController(
         }
 
         var userId = authorizationService.GetUserId();
-        if (!userId.HasValue)
+        var farmId = authorizationService.GetFarmId();
+        if (!userId.HasValue || !farmId.HasValue)
         {
             return Unauthorized();
         }
@@ -183,7 +193,13 @@ public class ReportsController(
         {
             var commentId = await reportService.AddCommentAsync(dto, reportId, userId.Value);
             // Optionally publish ReportCommentAddedEvent
-            // await _publishEndpoint.Publish(new ReportCommentAddedEvent(commentId, reportId, userId.Value, DateTime.UtcNow));
+            await publishEndpoint.Publish(new ReportNewCommentEvent(
+                reportId,
+                farmId.Value, // Assuming FarmId is needed for the event
+                userId.Value,
+                DateTime.UtcNow
+            ));
+            
             // Return the location of the new comment (optional but good practice)
             return CreatedAtAction(nameof(GetReport), new { id = reportId },
                 commentId); // Point back to the report for simplicity for now

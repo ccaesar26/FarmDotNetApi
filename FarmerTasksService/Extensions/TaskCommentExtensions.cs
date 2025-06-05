@@ -16,13 +16,13 @@ public static class TaskCommentExtensions
         );
     }
 
-    public static TaskComment ToEntity(this CreateTaskCommentDto createTaskCommentDto)
+    public static TaskComment ToEntity(this TaskCommentDto dto)
     {
         return new TaskComment
         {
-            TaskId = createTaskCommentDto.TaskId,
-            UserId = createTaskCommentDto.UserId,
-            Comment = createTaskCommentDto.Comment,
+            TaskId = dto.TaskId,
+            UserId = dto.UserId,
+            Comment = dto.Comment,
             CreatedAt = DateTime.UtcNow
         };
     }

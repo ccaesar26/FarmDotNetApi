@@ -41,9 +41,9 @@ public class WeatherController(
     public async Task<IActionResult> GetDailyForecast([FromQuery] double latitude, [FromQuery] double longitude,
         [FromQuery] int cnt = 7)
     {
-        if (cnt is < 1 or > 16)
+        if (cnt is < 1 or > 30)
         {
-            return BadRequest("The 'cnt' parameter must be between 1 and 16.");
+            return BadRequest("The 'cnt' parameter must be between 1 and 30.");
         }
 
         var forecastData = await weatherService.GetDailyForecastAsync(latitude, longitude, cnt);

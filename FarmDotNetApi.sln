@@ -29,6 +29,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantedCropsService", "Plan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportsService", "ReportsService\ReportsService.csproj", "{361C9DF4-992E-4808-A7C6-A74E881A46C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CropIdService", "CropIdService\CropIdService.csproj", "{D5CA9704-1F10-4B0C-ADAB-F87AA358179C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "NotificationService\NotificationService.csproj", "{CDEAFAA1-91E9-4E66-824C-406746393DD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Tests", "NotificationService.Tests\NotificationService.Tests.csproj", "{43152A7D-C3DC-4C2C-BBE3-EA3F32A7B303}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,5 +96,17 @@ Global
 		{361C9DF4-992E-4808-A7C6-A74E881A46C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{361C9DF4-992E-4808-A7C6-A74E881A46C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{361C9DF4-992E-4808-A7C6-A74E881A46C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5CA9704-1F10-4B0C-ADAB-F87AA358179C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5CA9704-1F10-4B0C-ADAB-F87AA358179C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5CA9704-1F10-4B0C-ADAB-F87AA358179C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5CA9704-1F10-4B0C-ADAB-F87AA358179C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDEAFAA1-91E9-4E66-824C-406746393DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDEAFAA1-91E9-4E66-824C-406746393DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDEAFAA1-91E9-4E66-824C-406746393DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDEAFAA1-91E9-4E66-824C-406746393DD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43152A7D-C3DC-4C2C-BBE3-EA3F32A7B303}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43152A7D-C3DC-4C2C-BBE3-EA3F32A7B303}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43152A7D-C3DC-4C2C-BBE3-EA3F32A7B303}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43152A7D-C3DC-4C2C-BBE3-EA3F32A7B303}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

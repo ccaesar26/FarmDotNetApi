@@ -137,7 +137,7 @@ public class TaskService(
         }
     }
 
-    public async ValueTask<Guid> AddCommentAsync(CreateTaskCommentDto dto) =>
+    public async ValueTask<Guid> AddCommentAsync(TaskCommentDto dto) =>
         (await taskCommentRepository.AddAsync(dto.ToEntity())).Id;
 
 

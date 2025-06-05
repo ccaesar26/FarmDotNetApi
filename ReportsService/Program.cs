@@ -9,22 +9,9 @@ using ReportsService.Repositories.ReportRepository;
 using ReportsService.Services.ReportHub;
 using ReportsService.Services.ReportService;
 using Shared.FarmAuthorizationService;
-using Shared.FarmClaimTypes;
+using Shared.Models.FarmClaimTypes;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Configure Supabase client
-var supabaseSection = builder.Configuration.GetSection("Supabase");
-var supabaseUrl = supabaseSection["Url"] ??
-                  throw new InvalidOperationException("Supabase URL is missing in configuration.");
-var supabaseKey = supabaseSection["Key"] ??
-                  throw new InvalidOperationException("Supabase Key is missing in configuration.");
-
-builder.Services.AddSingleton(_ => new Supabase.Client(supabaseUrl, supabaseKey, new Supabase.SupabaseOptions
-{
-    AutoRefreshToken = true,
-    AutoConnectRealtime = true
-}));
 
 // Add services to the container.
 // Add authentication & authorization

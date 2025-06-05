@@ -185,6 +185,40 @@
       ]
     },
     {
+      "DownstreamPathTemplate": "/api/crop-id/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5811
+        }
+      ],
+      "UpstreamPathTemplate": "/api/crop-id/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/notification/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5812
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notification/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    {
       "DownstreamPathTemplate": "/api/config/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -241,6 +275,36 @@
         }
       ],
       "UpstreamPathTemplate": "/reportHub",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/cropIdHub",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5811
+        }
+      ],
+      "UpstreamPathTemplate": "/cropIdHub",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/hubs/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5812
+        }
+      ],
+      "UpstreamPathTemplate": "/hubs/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST"

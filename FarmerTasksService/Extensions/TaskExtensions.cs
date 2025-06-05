@@ -5,7 +5,7 @@ namespace FarmerTasksService.Extensions;
 
 public static class TaskExtensions
 {
-    public static TaskDto ToDto(this TaskItem task) => new TaskDto(
+    public static TaskDto ToDto(this TaskItem task) => new(
         task.Id,
         task.Title,
         task.Description,

@@ -1,6 +1,6 @@
 ﻿namespace ReportsService.Models.Events;
 
-public record ReportCreatedEvent(
+public record ReportCreatedSignalREvent(
     Guid ReportId,
     Guid FarmId,
     Guid CreatedByUserId
