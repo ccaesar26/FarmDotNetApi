@@ -1,34 +1,49 @@
-# FarmInsight - Frontend (Angular Web App)
+# FarmInsight - Backend Microservices
 
-This repository contains the frontend web application for the **FarmInsight** platform, developed as part of my Bachelor's Thesis. The application is built with Angular and is designed for farm managers.
+This repository contains the backend for the **FarmInsight** platform, a project developed for my Bachelor's Thesis. The backend is built on a modern microservices architecture using ASP.NET Core.
 
 ## Overview
 
-The FarmInsight web app provides a comprehensive dashboard and a suite of tools for the strategic and operational management of a farm. It allows managers to get a clear overview of all activities, plan for the future, and interact with data in a modern, user-friendly interface.
+The backend is the functional core of the FarmInsight system. It is responsible for all business logic, data persistence, user authentication, and communication with external services. It exposes a series of RESTful APIs consumed by the Angular frontend and the Android mobile application.
 
-### Key Features
-*   **Interactive Dashboard:** A central hub showing weather forecasts, drought alerts, and a summary of ongoing tasks.
-*   **Field Management:** An interactive map (using Mapbox) where managers can draw, edit, and manage farm plots.
-*   **Crop Management:** A detailed crop catalog and a system for tracking currently planted crops, their lifecycle, and history.
-*   **Task Management:** A Kanban-style board for creating, assigning, monitoring, and commenting on tasks.
-*   **AI Disease Identification:** An interface to upload plant images and receive AI-powered disease diagnostics from the backend.
-*   **User Management:** Tools for adding and managing farm employees.
-*   **Real-time Notifications:** A notification panel that updates in real-time with system events via SignalR.
+### Key Architectural Principles
+*   **Microservices Architecture:** The system is decomposed into small, autonomous services, each responsible for a specific business domain (Bounded Context). This promotes scalability, fault tolerance, and independent development.
+*   **Database Per Service:** Each microservice has its own dedicated PostgreSQL database to ensure loose coupling.
+*   **Asynchronous Communication:** Services communicate with each other via a message broker (RabbitMQ) using an event-driven approach for high resilience.
+*   **API Gateway (Ocelot):** A single entry point for all clients, handling request routing, authentication, and other cross-cutting concerns.
+*   **Real-time Notifications:** SignalR is used to push real-time updates (e.g., new tasks, status changes) to connected clients.
+
+### Microservices
+
+*   `IdentityService`: Manages users, roles, authentication (JWT), and authorization.
+*   `FarmProfileService` & `UserProfileService`: Manages farm and user profile data.
+*   `FarmerTasksService`: Handles the creation, assignment, and tracking of agricultural tasks.
+*   `PlantedCropsService` & `CropCatalogService`: Manage planted crops and the general crop catalog.
+*   `ClimateIndicesService`: Integrates with Copernicus EDO for drought data.
+*   `WeatherService`: Integrates with OpenWeatherMap for weather forecasts.
+*   `CropIdService`: Integrates with Kindwise API for AI-based disease identification.
+*   `ReportsService`: Manages problem reports submitted by field workers.
+*   `NotificationService`: Centralizes and distributes real-time notifications via SignalR.
+*   ... and others.
 
 ### Technology Stack
 
-*   **Angular v19** (with Standalone Components)
-*   **TypeScript**
-*   **RxJS** for reactive programming and state management.
-*   **Angular Signals** for fine-grained reactivity.
-*   **PrimeNG** Component Library for a rich set of UI components.
-*   **SignalR Client** for real-time communication.
+*   **.NET 9 / C# 13**
+*   **ASP.NET Core Web API**
+*   **Entity Framework Core 8**
+*   **PostgreSQL**
+*   **RabbitMQ** (via MassTransit)
+*   **SignalR**
+*   **Ocelot** (API Gateway)
+*   **xUnit & Moq** (for unit/integration testing)
+*   **Docker/Docker Compose** for local development and containerization.
 
 ## Getting Started
 
 ### Prerequisites
-*   Node.js (LTS version)
-*   Angular CLI (`npm install -g @angular/cli`)
+*   .NET 9 SDK
+*   Docker Desktop (for running PostgreSQL and RabbitMQ)
+*   A code editor like Visual Studio 2022 or VS Code.
 
 ### Installation & Running
 1.  **Clone the repository:**
@@ -36,14 +51,9 @@ The FarmInsight web app provides a comprehensive dashboard and a suite of tools 
     git clone https://github.com/ccaesar26/FarmDotNetApi
     cd FarmDotNetApi
     ```
-2.  **Install dependencies:**
-    ```sh
-    npm install
-    ```
-3.  **Configure API endpoint:**
-    The application is configured to communicate with the backend API Gateway. Ensure the proxy configuration in `proxy.conf.json` points to the correct address where your backend is running.
-4.  **Run the development server:**
-    ```sh
-    ng serve
-    ```
-    Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+2.  **Launch infrastructure:**
+    Start the RabbitMQ container.
+3.  **Configure services:**
+    Update the `appsettings.Development.json` file in each microservice project with the correct connection strings and any necessary API keys for external services.
+4.  **Run the microservices:**
+    You can run each microservice individually from your IDE or by using the `dotnet run` command in each project's directory. It is recommended to run the API Gateway last.
