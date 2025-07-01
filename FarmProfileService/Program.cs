@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Shared.FarmAuthorizationService;
 using Shared.Models.FarmClaimTypes;
+using Shared.Services.FarmAuthorizationService;
 
 var builder = WebApplication.CreateBuilder(args);
 

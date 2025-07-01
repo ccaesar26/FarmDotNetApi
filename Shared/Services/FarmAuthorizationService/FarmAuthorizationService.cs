@@ -1,4 +1,7 @@
-﻿namespace Shared.FarmAuthorizationService;
+﻿using Shared.FarmAuthorizationService;
+using Shared.Models.FarmClaimTypes;
+
+namespace Shared.Services.FarmAuthorizationService;
 
 public class FarmAuthorizationService(IHttpContextAccessor httpContextAccessor) : IFarmAuthorizationService
 {
@@ -32,7 +35,7 @@ public class FarmAuthorizationService(IHttpContextAccessor httpContextAccessor) 
 
     public string GetUserRole()
     {
-        var claim = httpContextAccessor.HttpContext?.User.FindFirst("role");
+        var claim = httpContextAccessor.HttpContext?.User.FindFirst(FarmClaimTypes.Role);
         if (claim == null)
         {
             throw new UnauthorizedAccessException("Role is missing from token.");

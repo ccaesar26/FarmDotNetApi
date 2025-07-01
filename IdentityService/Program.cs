@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Shared.FarmAuthorizationService;
+using Shared.Services.FarmAuthorizationService;
 
 var builder = WebApplication.CreateBuilder(args);
 

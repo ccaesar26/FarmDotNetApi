@@ -1,5 +1,6 @@
 ﻿using NotificationService.MappingExtensions;
 using NotificationService.Models.Dtos;
+using NotificationService.Models.Entities;
 using NotificationService.Repositories;
 
 namespace NotificationService.Services;
@@ -15,7 +16,9 @@ public class NotificationService(INotificationRepository notificationRepository)
         }
 
         var notifications = await notificationRepository.GetNotificationsByFarmIdAsync(farmId, includeRead);
-        return notifications.Select(n => n.ToDto());
+        return notifications
+            .Where(n => n.TargetUserId == null)
+            .Select(n => n.ToDto());
     }
 
     public async ValueTask<IEnumerable<NotificationDto>> GetNotificationsByTargetUserIdAsync(
@@ -70,5 +73,10 @@ public class NotificationService(INotificationRepository notificationRepository)
 
         notificationEntity.IsRead = true;
         return await notificationRepository.UpdateNotificationAsync(notificationEntity);
+    }
+    
+    private static bool IsManagerNotification(NotificationEntity notification)
+    {
+        return notification.NotificationType != "NewTask";
     }
 }

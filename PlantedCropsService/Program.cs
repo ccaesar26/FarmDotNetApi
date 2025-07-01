@@ -13,6 +13,7 @@ using PlantedCropsService.Services.CropService;
 using PlantedCropsService.Services.GrowthStageEventService;
 using PlantedCropsService.Services.UnitOfWork;
 using Shared.FarmAuthorizationService;
+using Shared.Services.FarmAuthorizationService;
 
 var builder = WebApplication.CreateBuilder(args);
 

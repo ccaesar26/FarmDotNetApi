@@ -10,6 +10,7 @@ using ReportsService.Services.ReportHub;
 using ReportsService.Services.ReportService;
 using Shared.FarmAuthorizationService;
 using Shared.Models.FarmClaimTypes;
+using Shared.Services.FarmAuthorizationService;
 
 var builder = WebApplication.CreateBuilder(args);
 

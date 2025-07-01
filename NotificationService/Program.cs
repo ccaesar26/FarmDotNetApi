@@ -10,6 +10,7 @@ using NotificationService.Repositories;
 using NotificationService.Services;
 using Shared.FarmAuthorizationService;
 using Shared.Models.FarmClaimTypes;
+using Shared.Services.FarmAuthorizationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,6 +99,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<ReportCreatedEventConsumer>();
     x.AddConsumer<ReportNewCommentEventConsumer>();
+    x.AddConsumer<TaskAssignedEventConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -117,6 +119,10 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("notification-service-report-new-comment", e => // Unique queue name
         {
             e.ConfigureConsumer<ReportNewCommentEventConsumer>(context);
+        });
+        cfg.ReceiveEndpoint("notification-service-task-assigned", e => // Unique queue name
+        {
+            e.ConfigureConsumer<TaskAssignedEventConsumer>(context);
         });
 
         cfg.ConfigureEndpoints(context); // Automatically configures endpoints based on consumers

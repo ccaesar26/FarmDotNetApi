@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,7 +64,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngular", policy =>
     {
         policy
-            .WithOrigins("http://localhost:4200", "http://localhost:5800")
+            .WithOrigins(
+                "http://localhost:4200",
+                "https://localhost:4200", 
+                "http://localhost:5800"
+                )
             .AllowCredentials()
             .AllowAnyMethod()
             .AllowAnyHeader();
@@ -90,7 +95,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 app.UseRouting();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

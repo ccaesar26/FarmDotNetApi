@@ -29,7 +29,7 @@ public class TasksController(
     {
         var farmId = farmAuthorizationService.GetFarmId();
         var userId = farmAuthorizationService.GetUserId();
-        if (farmId.HasValue == false || userId == null || string.IsNullOrEmpty(farmAuthorizationService.GetUserRole()))
+        if (farmId.HasValue == false || userId == null)
         {
             return Unauthorized();
         }
@@ -137,7 +137,8 @@ public class TasksController(
     public async ValueTask<IActionResult> AssignUsersToTaskRequest(Guid taskId, AssignUsersToTaskRequest request)
     {
         var farmId = farmAuthorizationService.GetFarmId();
-        if (farmId == null)
+        var userId = farmAuthorizationService.GetUserId();
+        if (farmId == null || userId == null)
         {
             return Unauthorized();
         }
@@ -145,11 +146,17 @@ public class TasksController(
         try
         {
             await taskService.AssignUsersToTaskAsync(taskId, request.UserIds);
-            request.UserIds.ForEach(async void (userId) =>
+            request.UserIds.ForEach(async void (assignedUserId) =>
             {
                 try
                 {
-                    await publishEndpoint.Publish(new TaskAssignedEvent(taskId, userId));
+                    await publishEndpoint.Publish(new TaskAssignedEvent(
+                        taskId, 
+                        assignedUserId,
+                        farmId.Value,
+                        userId.Value,
+                        DateTime.UtcNow
+                    ));
                 }
                 catch (Exception _)
                 {

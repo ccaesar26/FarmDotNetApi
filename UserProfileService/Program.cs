@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.FarmAuthorizationService;
 using Shared.Models.FarmClaimTypes;
+using Shared.Services.FarmAuthorizationService;
 using UserProfileService.Converters;
 using UserProfileService.Data;
 using UserProfileService.Repositories.AttributeCategoryRepository;
